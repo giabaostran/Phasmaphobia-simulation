@@ -1,6 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
-
+#include <stdlib.h>
 #include <stdbool.h>
 #include <semaphore.h>
 #include <pthread.h>
@@ -68,80 +68,70 @@ enum GhostType
     GH_SPIRIT = EV_WRITING | EV_RADIO | EV_EMF,
 };
 
-typedef struct
+struct CaseFile
 {
     EvidenceByte collected; // Union of all of the evidence bits collected between all hunters
     bool solved;            // True when >=3 unique bits set
     sem_t mutex;            // Used for synchronizing both fields when multithreading
-} CaseFile;
+};
 
 // Implement here based on the requirements, should all be allocated to the House structure
-typedef struct
+struct Room
 {
     char name[MAX_ROOM_NAME];
-    Room *connected_rooms[MAX_ROOMS];
-    int room_connection_count;
-    Ghost *ghost;
-    Hunter *hunters[MAX_ROOM_OCCUPANCY];
+    struct Room *connected_rooms[MAX_ROOMS];
+    int connection_count;
+    struct Ghost *ghost;
+    struct Hunter *hunters[MAX_ROOM_OCCUPANCY];
     int hunter_count;
     bool is_exit;
     EvidenceByte evidence;
-} Room;
+};
 
-typedef struct
+struct RoomNode
 {
-    Room *room;
+    struct Room *room;
 } RoomNode;
 
-typedef struct
+struct RoomStack
 {
-    RoomNode *head;
-} RoomStack;
+    struct RoomNode *head;
+};
 
-typedef struct
+struct Hunter
 {
     int id;
-    Room *current_room;
-    CaseFile *case_file;
+    struct Room *current_room;
+    struct CaseFile *case_file;
     EvidenceByte device;
-    RoomStack room_stack;
+    struct RoomStack room_stack;
     int fear;
     int boredom;
     enum LogReason exit_reason;
     bool has_exit;
-} Hunter;
+};
 
-/* Implement here based on the requirements, should be allocated to the House structure
-The ghost requires an id, an enum GhostType which represents both the type of ghost and the
-evidence required to catch it, a pointer to the room that the ghost is currently in, an integer
-representing the boredom level of the ghost, and some boolean flag determining if the ghost has
-exited the simulation or not */
-typedef struct
+struct Ghost
 {
     int id;
     enum GhostType type;
-    Room *current_room;
+    struct Room *current_room;
     int boredom;
     bool has_exit; // determine if a ghost has exit the simulaiton
-} Ghost;
+};
 
 // Can be either stack or heap allocated
 struct House
 {
-    Room *rooms[MAX_ROOMS];
-    Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
+    struct Room rooms[MAX_ROOMS];
+    struct Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
     int room_count;
-    Hunter *hunters;
-    CaseFile case_file;
-    Ghost ghost;
+    struct Hunter *hunters;
+    struct CaseFile case_file;
+    struct Ghost ghost;
 };
 
-/* The provided `house_populate_rooms()` function requires the following functions.
-   You are free to rename them and change their parameters and modify house_populate_rooms()
-   as needed as long as the house has the correct rooms and connections after calling it.
-*/
 
-void room_init(Room *room, const char *name, bool is_exit);
-void rooms_connect(Room *a, Room *b); // Bidirectional connection
+
 
 #endif // DEFS_H

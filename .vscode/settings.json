@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "defs.h": "c",
+        "room.h": "c",
+        "stdlib.h": "c",
+        "ghost.h": "c",
+        "log.h": "c",
+        "stdio.h": "c",
+        "pthread.h": "c",
+        "helpers.h": "c"
+    }
+}
