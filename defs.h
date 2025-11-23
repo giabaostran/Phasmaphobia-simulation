@@ -22,67 +22,118 @@
 
 typedef unsigned char EvidenceByte; // Just giving a helpful name to unsigned char for evidence bitmasks
 
-enum LogReason {
+enum LogReason
+{
     LR_EVIDENCE = 0,
     LR_BORED = 1,
     LR_AFRAID = 2
 };
 
-enum EvidenceType {
-    EV_EMF          = 1 << 0,
-    EV_ORBS         = 1 << 1,
-    EV_RADIO        = 1 << 2,
-    EV_TEMPERATURE  = 1 << 3,
+enum EvidenceType
+{
+    EV_EMF = 1 << 0,
+    EV_ORBS = 1 << 1,
+    EV_RADIO = 1 << 2,
+    EV_TEMPERATURE = 1 << 3,
     EV_FINGERPRINTS = 1 << 4,
-    EV_WRITING      = 1 << 5,
-    EV_INFRARED     = 1 << 6,
+    EV_WRITING = 1 << 5,
+    EV_INFRARED = 1 << 6,
 };
 
-enum GhostType {
-    GH_POLTERGEIST  = EV_FINGERPRINTS | EV_TEMPERATURE | EV_WRITING,
-    GH_THE_MIMIC    = EV_FINGERPRINTS | EV_TEMPERATURE | EV_RADIO,
-    GH_HANTU        = EV_FINGERPRINTS | EV_TEMPERATURE | EV_ORBS,
-    GH_JINN         = EV_FINGERPRINTS | EV_TEMPERATURE | EV_EMF,
-    GH_PHANTOM      = EV_FINGERPRINTS | EV_INFRARED    | EV_RADIO,
-    GH_BANSHEE      = EV_FINGERPRINTS | EV_INFRARED    | EV_ORBS,
-    GH_GORYO        = EV_FINGERPRINTS | EV_INFRARED    | EV_EMF,
-    GH_BULLIES      = EV_FINGERPRINTS | EV_WRITING     | EV_RADIO,
-    GH_MYLING       = EV_FINGERPRINTS | EV_WRITING     | EV_EMF,
-    GH_OBAKE        = EV_FINGERPRINTS | EV_ORBS        | EV_EMF,
-    GH_YUREI        = EV_TEMPERATURE  | EV_INFRARED    | EV_ORBS,
-    GH_ONI          = EV_TEMPERATURE  | EV_INFRARED    | EV_EMF,
-    GH_MOROI        = EV_TEMPERATURE  | EV_WRITING     | EV_RADIO,
-    GH_REVENANT     = EV_TEMPERATURE  | EV_WRITING     | EV_ORBS,
-    GH_SHADE        = EV_TEMPERATURE  | EV_WRITING     | EV_EMF,
-    GH_ONRYO        = EV_TEMPERATURE  | EV_RADIO       | EV_ORBS,
-    GH_THE_TWINS    = EV_TEMPERATURE  | EV_RADIO       | EV_EMF,
-    GH_DEOGEN       = EV_INFRARED     | EV_WRITING     | EV_RADIO,
-    GH_THAYE        = EV_INFRARED     | EV_WRITING     | EV_ORBS,
-    GH_YOKAI        = EV_INFRARED     | EV_RADIO       | EV_ORBS,
-    GH_WRAITH       = EV_INFRARED     | EV_RADIO       | EV_EMF,
-    GH_RAIJU        = EV_INFRARED     | EV_ORBS        | EV_EMF,
-    GH_MARE         = EV_WRITING      | EV_RADIO       | EV_ORBS,
-    GH_SPIRIT       = EV_WRITING      | EV_RADIO       | EV_EMF,
+enum GhostType
+{
+    GH_POLTERGEIST = EV_FINGERPRINTS | EV_TEMPERATURE | EV_WRITING,
+    GH_THE_MIMIC = EV_FINGERPRINTS | EV_TEMPERATURE | EV_RADIO,
+    GH_HANTU = EV_FINGERPRINTS | EV_TEMPERATURE | EV_ORBS,
+    GH_JINN = EV_FINGERPRINTS | EV_TEMPERATURE | EV_EMF,
+    GH_PHANTOM = EV_FINGERPRINTS | EV_INFRARED | EV_RADIO,
+    GH_BANSHEE = EV_FINGERPRINTS | EV_INFRARED | EV_ORBS,
+    GH_GORYO = EV_FINGERPRINTS | EV_INFRARED | EV_EMF,
+    GH_BULLIES = EV_FINGERPRINTS | EV_WRITING | EV_RADIO,
+    GH_MYLING = EV_FINGERPRINTS | EV_WRITING | EV_EMF,
+    GH_OBAKE = EV_FINGERPRINTS | EV_ORBS | EV_EMF,
+    GH_YUREI = EV_TEMPERATURE | EV_INFRARED | EV_ORBS,
+    GH_ONI = EV_TEMPERATURE | EV_INFRARED | EV_EMF,
+    GH_MOROI = EV_TEMPERATURE | EV_WRITING | EV_RADIO,
+    GH_REVENANT = EV_TEMPERATURE | EV_WRITING | EV_ORBS,
+    GH_SHADE = EV_TEMPERATURE | EV_WRITING | EV_EMF,
+    GH_ONRYO = EV_TEMPERATURE | EV_RADIO | EV_ORBS,
+    GH_THE_TWINS = EV_TEMPERATURE | EV_RADIO | EV_EMF,
+    GH_DEOGEN = EV_INFRARED | EV_WRITING | EV_RADIO,
+    GH_THAYE = EV_INFRARED | EV_WRITING | EV_ORBS,
+    GH_YOKAI = EV_INFRARED | EV_RADIO | EV_ORBS,
+    GH_WRAITH = EV_INFRARED | EV_RADIO | EV_EMF,
+    GH_RAIJU = EV_INFRARED | EV_ORBS | EV_EMF,
+    GH_MARE = EV_WRITING | EV_RADIO | EV_ORBS,
+    GH_SPIRIT = EV_WRITING | EV_RADIO | EV_EMF,
 };
 
-struct CaseFile {
+typedef struct
+{
     EvidenceByte collected; // Union of all of the evidence bits collected between all hunters
-    bool         solved;    // True when >=3 unique bits set
-    sem_t        mutex;     // Used for synchronizing both fields when multithreading
-};
+    bool solved;            // True when >=3 unique bits set
+    sem_t mutex;            // Used for synchronizing both fields when multithreading
+} CaseFile;
 
 // Implement here based on the requirements, should all be allocated to the House structure
-struct Room {
-};
+typedef struct
+{
+    char name[MAX_ROOM_NAME];
+    Room *connected_rooms[MAX_ROOMS];
+    int room_connection_count;
+    Ghost *ghost;
+    Hunter *hunters[MAX_ROOM_OCCUPANCY];
+    int hunter_count;
+    bool is_exit;
+    EvidenceByte evidence;
+} Room;
 
-// Implement here based on the requirements, should be allocated to the House structure
-struct Ghost {
+typedef struct
+{
+    Room *room;
+} RoomNode;
 
-};
+typedef struct
+{
+    RoomNode *head;
+} RoomStack;
+
+typedef struct
+{
+    int id;
+    Room *current_room;
+    CaseFile *case_file;
+    EvidenceByte device;
+    RoomStack room_stack;
+    int fear;
+    int boredom;
+    enum LogReason exit_reason;
+    bool has_exit;
+} Hunter;
+
+/* Implement here based on the requirements, should be allocated to the House structure
+The ghost requires an id, an enum GhostType which represents both the type of ghost and the
+evidence required to catch it, a pointer to the room that the ghost is currently in, an integer
+representing the boredom level of the ghost, and some boolean flag determining if the ghost has
+exited the simulation or not */
+typedef struct
+{
+    int id;
+    enum GhostType type;
+    Room *current_room;
+    int boredom;
+    bool has_exit; // determine if a ghost has exit the simulaiton
+} Ghost;
 
 // Can be either stack or heap allocated
-struct House {
-    struct Room* starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
+struct House
+{
+    Room *rooms[MAX_ROOMS];
+    Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
+    int room_count;
+    Hunter *hunters;
+    CaseFile case_file;
+    Ghost ghost;
 };
 
 /* The provided `house_populate_rooms()` function requires the following functions.
@@ -90,7 +141,7 @@ struct House {
    as needed as long as the house has the correct rooms and connections after calling it.
 */
 
-void room_init(struct Room* room, const char* name, bool is_exit);
-void rooms_connect(struct Room* a, struct Room* b); // Bidirectional connection
+void room_init(Room *room, const char *name, bool is_exit);
+void rooms_connect(Room *a, Room *b); // Bidirectional connection
 
 #endif // DEFS_H
