@@ -1,11 +1,39 @@
 #include "ghost.h"
 
 
+// Array-based ghost list for random access
+enum GhostType ghost_list[] = {
+    GH_POLTERGEIST,
+    GH_THE_MIMIC,
+    GH_HANTU,
+    GH_JINN,
+    GH_PHANTOM,
+    GH_BANSHEE,
+    GH_GORYO,
+    GH_BULLIES,
+    GH_MYLING,
+    GH_OBAKE,
+    GH_YUREI,
+    GH_ONI,
+    GH_MOROI,
+    GH_REVENANT,
+    GH_SHADE,
+    GH_ONRYO,
+    GH_THE_TWINS,
+    GH_DEOGEN,
+    GH_THAYE,
+    GH_YOKAI,
+    GH_WRAITH,
+    GH_RAIJU,
+    GH_MARE,
+    GH_SPIRIT,
+};
+
 void ghost_init(struct House *house, struct Ghost *ghost)
 {
     // Initialization
     ghost->id = DEFAULT_GHOST_ID;
-    ghost->type = GH_YOKAI; // This value is hard-coded for now
+    ghost->type = ghost_list[rand() % GHOST_TYPE_COUNT]; // This value is hard-coded for now
     ghost->boredom = 0;
     ghost->has_exit = false; // determine if a ghost has exit the si
     int r = rand() % house->room_count;
@@ -75,7 +103,7 @@ void ghost_idle(struct Ghost *ghost)
     log_ghost_idle(ghost->id, ghost->boredom, ghost->current_room->name);
 }
 
-void handle_ghost_turn(struct Ghost *ghost)
+void ghost_take_turn(struct Ghost *ghost)
 {
 
     struct Room *room = ghost->current_room;

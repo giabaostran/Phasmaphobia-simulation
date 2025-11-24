@@ -1,6 +1,6 @@
 #include "defs.h"
-#include "room.h"
 #include "log.h"
+
 
 /**
  * Initializes a Ghost structure and spawns it in a random room.
@@ -22,7 +22,7 @@ void ghost_init(struct House *house, struct Ghost *ghost);
  *
  * @param ghost  Pointer to the ghost acting this turn.
  */
-void handle_ghost_turn(struct Ghost *ghost);
+void ghost_take_turn(struct Ghost *ghost);
 
 /**
  * Moves the ghost from its current room to one of the connected rooms randomly.
@@ -75,4 +75,3 @@ bool ghost_find_hunter(struct Ghost *ghost);
  * @return      nothing
  */
 void ghost_idle(struct Ghost *ghost);
-

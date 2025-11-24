@@ -1,6 +1,7 @@
 #include "defs.h"
 #include "helpers.h"
 #include "ghost.h"
+#include "hunter.h"
 
 int main()
 {
@@ -18,7 +19,7 @@ int main()
 
     // 1. Initialize a House structure.
     struct CaseFile case_file;
-    struct House house = {.case_file = &case_file};
+    struct House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
     // 3. Initialize all of the ghost data and hunters.
@@ -26,21 +27,27 @@ int main()
     ghost_init(&house, &ghost);
 
     char buffer[MAX_HUNTER_NAME];
-    struct HunterArray hunter_array;
 
-    while (true)
+    while (house.hunter_count != MAX_ROOM_OCCUPANCY)
     {
         printf("Enter name: ");
         fgets(buffer, MAX_HUNTER_NAME, stdin);
         buffer[strcspn(buffer, "\n")] = '\0'; // remove new line char from buffer
         if (strcasecmp(buffer, "done") == 0)
             break;
-        hunter_init(&hunter_array, buffer);
+        hunter_init(&house, buffer);
+    }
+
+    struct HunterNode *node = house.hunters.head;
+    while (node != NULL)
+    {
+        printf("%s\n", node->hunter->name);
+        node = node->next;
     }
 
     while (ghost.boredom != ENTITY_BOREDOM_MAX)
     {
-        handle_ghost_turn(&ghost);
+        ghost_take_turn(&ghost);
     }
 
     return 0;

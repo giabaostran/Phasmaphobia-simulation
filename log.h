@@ -1,8 +1,10 @@
+
+#ifndef LOG_H
+#define LOG_H
+
 #include "defs.h"
 #include "helpers.h"
-#include <sys/time.h>
-#include <time.h>
-#include <stdio.h>
+
 // These enums are just for logging purposes, not needed elsewhere
 enum LogEntityType
 {
@@ -34,3 +36,4 @@ void log_ghost_exit(int ghost_id, int boredom, const char *room_name);
 void log_ghost_idle(int ghost_id, int boredom, const char *room_name);
 static const char *log_entity_type_to_string(enum LogEntityType type);
 static void write_log_record(const struct LogRecord *record);
+#endif

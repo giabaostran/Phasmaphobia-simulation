@@ -1,3 +1,4 @@
 #include "defs.h"
+#include "log.h"
 
-void hunter_init(struct HunterArray *hunter_list, char *name);
+void hunter_init(struct House *house, char *name);

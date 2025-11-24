@@ -9,6 +9,9 @@
         "stdio.h": "c",
         "pthread.h": "c",
         "helpers.h": "c",
-        "hunter.h": "c"
+        "hunter.h": "c",
+        "bitset": "c",
+        "unordered_map": "c",
+        "time.h": "c"
     }
 }

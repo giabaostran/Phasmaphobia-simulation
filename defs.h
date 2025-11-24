@@ -5,7 +5,9 @@
 #include <stdbool.h>
 #include <semaphore.h>
 #include <pthread.h>
-
+#include <sys/time.h>
+#include <time.h>
+#include <stdio.h>
 /*
     You are free to rename all of the types and functions defined here.
 
@@ -18,6 +20,7 @@
 #define MAX_ROOM_OCCUPANCY 8
 #define MAX_CONNECTIONS 8
 #define GHOST_TYPE_COUNT 24
+#define EVIDENCE_TYPE_COUNT 7
 #define ENTITY_BOREDOM_MAX 15
 #define HUNTER_FEAR_MAX 15
 #define DEFAULT_GHOST_ID 68057
@@ -100,12 +103,12 @@ struct RoomNode
 struct RoomStack
 {
     struct RoomNode *head;
-    int size;
 };
 
 struct Hunter
 {
     int id;
+    char name[MAX_HUNTER_NAME];
     struct Room *current_room;
     struct CaseFile *case_file;
     EvidenceByte device;
@@ -119,7 +122,6 @@ struct Hunter
 struct HunterArray
 {
     struct HunterNode *head;
-    int size;
 };
 
 struct HunterNode
@@ -142,10 +144,11 @@ struct House
 {
     struct Room rooms[MAX_ROOMS];
     struct Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
-    int room_count;
-    struct Hunter *hunters;
+    struct HunterArray hunters;
     struct CaseFile *case_file;
     struct Ghost ghost;
+    int room_count;
+    int hunter_count;
 };
 
 #endif // DEFS_H
