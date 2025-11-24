@@ -19,7 +19,7 @@ void ghost_init(struct House *house, struct Ghost *ghost)
 bool ghost_find_hunter(struct Ghost *ghost)
 {
     // return if any hunter is in the room
-    return ghost->current_room->hunter_count == 0 ? false : true;
+    return ghost->current_room->hunter_count > 0;
 }
 
 void ghost_scare(struct Ghost *ghost)
@@ -28,8 +28,11 @@ void ghost_scare(struct Ghost *ghost)
     ghost->boredom = 0;
 }
 
-void ghost_haunt(struct Ghost *ghost) {
+void ghost_haunt(struct Ghost *ghost)
+{
 
+    struct Room *current_room = ghost->current_room;
+    // current_room->evidence = ghost;
 };
 
 void ghost_move(struct Ghost *ghost)
@@ -44,22 +47,30 @@ void ghost_move(struct Ghost *ghost)
     // Clear its presence from the room it just exited
     current_room->ghost = NULL;
     // Log it down
-    log_ghost_move(ghost->id, ghost->boredom, current_room, ghost->current_room);
+    log_ghost_move(ghost->id, ghost->boredom, current_room->name, ghost->current_room->name);
 }
 
 void ghost_exit(struct Ghost *ghost)
 {
     ghost->has_exit = true;
-    log_ghost_exit(ghost->id, ghost->boredom, ghost->current_room);
+    ghost->current_room = NULL;
+    log_ghost_exit(ghost->id, ghost->boredom, ghost->current_room->name);
 }
+
+void ghost_idle(struct Ghost *ghost){
+    log_ghost_idle(ghost->id, ghost->boredom, ghost->current_room->name);
+}
+
 
 void handle_ghost_turn(struct Ghost *ghost)
 {
+
     struct Room *room = ghost->current_room;
 
     // 1. ENFORCED ACTION: if any hunter is presenting in the room, ghost must scare them
-    if (ghost_find_hunter(room))
+    if (ghost->current_room->hunter_count > 0)
     {
+        printf("{}");
         ghost_scare(ghost);
         return;
     }
@@ -83,6 +94,7 @@ void handle_ghost_turn(struct Ghost *ghost)
         break;
 
     default: // Ghost idle doing nothing
+        ghost_idle(ghost);
         break;
     }
 }

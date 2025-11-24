@@ -23,9 +23,12 @@ int main()
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
     // 3. Initialize all of the ghost data and hunters.
-    struct Ghost ghost;
+     struct Ghost ghost;
     ghost_init(&house, &ghost);
-
+    while (ghost.boredom != ENTITY_BOREDOM_MAX)
+    {
+        handle_ghost_turn(&ghost);
+    }
 
     return 0;
 }
