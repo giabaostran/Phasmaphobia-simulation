@@ -1,6 +1,3 @@
-#ifndef GHOST_H
-#define GHOST_H
-
 #include "defs.h"
 #include "room.h"
 #include "log.h"
@@ -79,4 +76,3 @@ bool ghost_find_hunter(struct Ghost *ghost);
  */
 void ghost_idle(struct Ghost *ghost);
 
-#endif // GHOST_H

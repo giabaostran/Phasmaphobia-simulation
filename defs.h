@@ -93,11 +93,14 @@ struct Room
 struct RoomNode
 {
     struct Room *room;
+    struct RoomNode *next;
+
 } RoomNode;
 
 struct RoomStack
 {
     struct RoomNode *head;
+    int size;
 };
 
 struct Hunter
@@ -111,6 +114,18 @@ struct Hunter
     int boredom;
     enum LogReason exit_reason;
     bool has_exit;
+};
+
+struct HunterArray
+{
+    struct HunterNode *head;
+    int size;
+};
+
+struct HunterNode
+{
+    struct Hunter *hunter;
+    struct HunterNode *next;
 };
 
 struct Ghost
@@ -129,11 +144,8 @@ struct House
     struct Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
     int room_count;
     struct Hunter *hunters;
-    struct CaseFile case_file;
+    struct CaseFile *case_file;
     struct Ghost ghost;
 };
-
-
-
 
 #endif // DEFS_H

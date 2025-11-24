@@ -1,6 +1,5 @@
 #include "helpers.h"
 
-
 // ---- House layout ----
 void house_populate_rooms(struct House *house)
 {

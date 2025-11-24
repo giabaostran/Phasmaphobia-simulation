@@ -17,12 +17,27 @@ int main()
     srand(time(NULL));
 
     // 1. Initialize a House structure.
-    struct House house;
+    struct CaseFile case_file;
+    struct House house = {.case_file = &case_file};
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
     // 3. Initialize all of the ghost data and hunters.
     struct Ghost ghost;
     ghost_init(&house, &ghost);
+
+    char buffer[MAX_HUNTER_NAME];
+    struct HunterArray hunter_array;
+
+    while (true)
+    {
+        printf("Enter name: ");
+        fgets(buffer, MAX_HUNTER_NAME, stdin);
+        buffer[strcspn(buffer, "\n")] = '\0'; // remove new line char from buffer
+        if (strcasecmp(buffer, "done") == 0)
+            break;
+        hunter_init(&hunter_array, buffer);
+    }
+
     while (ghost.boredom != ENTITY_BOREDOM_MAX)
     {
         handle_ghost_turn(&ghost);

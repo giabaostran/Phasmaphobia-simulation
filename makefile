@@ -1,7 +1,7 @@
 all: main
 
-main: main.o helpers.o room.o ghost.o log.o
-	gcc main.o helpers.o room.o ghost.o log.o -o main
+main: main.o helpers.o room.o ghost.o log.o hunter.o
+	gcc main.o helpers.o room.o ghost.o log.o hunter.o -o main
 
 main.o: main.c
 	gcc -c main.c
@@ -14,6 +14,9 @@ ghost.o: ghost.c
 
 room.o: room.c
 	gcc -c room.c
+
+hunter.o: hunter.c
+	gcc -c hunter.c
 
 log.o: log.c
 	gcc -c log.c

@@ -88,7 +88,7 @@ void handle_ghost_turn(struct Ghost *ghost)
         return;
     }
     // 2. No hunter presents, ghost becomes more bored. If reached max boredom, it leaves the house
-    if (++ghost->boredom >= ENTITY_BOREDOM_MAX)
+    else if (++ghost->boredom >= ENTITY_BOREDOM_MAX)
     {
         ghost_exit(ghost);
         return;
