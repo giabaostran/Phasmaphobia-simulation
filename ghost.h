@@ -2,7 +2,8 @@
 #define GHOST_H
 
 #include "defs.h"
-#include <stdlib.h>
+#include "room.h"
+#include "log.h"
 
 /**
  * Initializes a Ghost structure and spawns it in a random room.

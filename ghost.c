@@ -1,12 +1,11 @@
 #include "ghost.h"
-#include "room.h"
-#include "log.h"
+
 
 void ghost_init(struct House *house, struct Ghost *ghost)
 {
     // Initialization
     ghost->id = DEFAULT_GHOST_ID;
-    ghost->type = GH_BANSHEE; // This value is hard-coded for now
+    ghost->type = GH_YOKAI; // This value is hard-coded for now
     ghost->boredom = 0;
     ghost->has_exit = false; // determine if a ghost has exit the si
     int r = rand() % house->room_count;
@@ -33,6 +32,20 @@ void ghost_haunt(struct Ghost *ghost)
 
     struct Room *current_room = ghost->current_room;
     // current_room->evidence = ghost;
+
+    // Randomly choose one of the evidence of the ghost to leave at the room
+    unsigned char count = rand() % 3 + 1;
+    // Create a mask
+    enum EvidenceType mask = 1;
+    // Use bitwise op to extract the chosen evidence type
+    while (true)
+    {
+        if (mask & ghost->type)
+            if (--count == 0)
+                break;
+        mask <<= 1;
+    }
+    log_ghost_evidence(ghost->id, ghost->boredom, current_room->name, mask);
 };
 
 void ghost_move(struct Ghost *ghost)
@@ -57,10 +70,10 @@ void ghost_exit(struct Ghost *ghost)
     log_ghost_exit(ghost->id, ghost->boredom, ghost->current_room->name);
 }
 
-void ghost_idle(struct Ghost *ghost){
+void ghost_idle(struct Ghost *ghost)
+{
     log_ghost_idle(ghost->id, ghost->boredom, ghost->current_room->name);
 }
-
 
 void handle_ghost_turn(struct Ghost *ghost)
 {

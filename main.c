@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "defs.h"
 #include "helpers.h"
 #include "ghost.h"
@@ -17,13 +14,14 @@ int main()
          - The evidence collected by each hunter and which ghost is represented by that evidence.
     7. Clean up all dynamically allocated resources and call sem_destroy() on all semaphores.
     */
+    srand(time(NULL));
 
     // 1. Initialize a House structure.
     struct House house;
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
     // 3. Initialize all of the ghost data and hunters.
-     struct Ghost ghost;
+    struct Ghost ghost;
     ghost_init(&house, &ghost);
     while (ghost.boredom != ENTITY_BOREDOM_MAX)
     {

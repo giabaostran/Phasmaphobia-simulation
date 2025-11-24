@@ -1,6 +1,7 @@
 #ifndef DEFS_H
 #define DEFS_H
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <semaphore.h>
 #include <pthread.h>
@@ -16,6 +17,7 @@
 #define MAX_ROOMS 24
 #define MAX_ROOM_OCCUPANCY 8
 #define MAX_CONNECTIONS 8
+#define GHOST_TYPE_COUNT 24
 #define ENTITY_BOREDOM_MAX 15
 #define HUNTER_FEAR_MAX 15
 #define DEFAULT_GHOST_ID 68057

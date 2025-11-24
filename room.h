@@ -1,5 +1,4 @@
 #include "defs.h"
-#include <string.h>
 
 /**
  * COMPLETE: Initializes a Room structure with the given name and exit flag.
@@ -21,4 +20,3 @@ void room_init(struct Room *room, const char *name, bool is_exit);
  * @return         Nothing
  */
 void rooms_connect(struct Room *a, struct Room *b);
-
