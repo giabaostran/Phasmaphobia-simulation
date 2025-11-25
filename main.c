@@ -41,21 +41,29 @@ int main() {
         hunter_init(&house, buffer, id);
     }
 
-    bool ghost_win, hunter_win;
+    bool ghost_win = false, hunter_win = false;
     printf("==== GAME START =====\n");
     while (true) {
         if (ghost.has_exit == false)
             ghost_take_turn(&house, &ghost);
+
         struct HunterNode *agent = house.hunters.head;
+
         while (agent != NULL) {
             if (agent->hunter->has_exit == false)
                 hunter_take_turn(&house, agent->hunter);
             agent = agent->next;
         }
+
+        if (ghost_win == false && case_file.solved == true)
+            hunter_win = true;
+
+        if (hunter_win == false && case_file.solved == false && house.hunter_count == 0)
+            ghost_win = true;
+
         if (ghost.has_exit && house.hunter_count == 0)
             break;
     }
 
-    return
-            0;
+    return 0;
 }
