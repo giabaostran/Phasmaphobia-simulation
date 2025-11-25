@@ -13,10 +13,10 @@ int main() {
          - The evidence collected by each hunter and which ghost is represented by that evidence.
     7. Clean up all dynamically allocated resources and call sem_destroy() on all semaphores.
     */
-
-
+    time_t fixed_seconds = 2;
+    srand(fixed_seconds);
     // 1. Initialize a House structure.
-    srand(time(NULL));
+
     struct CaseFile case_file = {.evidence_found = 0, .solved = false};
     struct House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.

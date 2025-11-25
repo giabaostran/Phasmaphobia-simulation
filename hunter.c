@@ -36,6 +36,9 @@ void hunter_gets_scared(struct Hunter *hunter) {
     hunter->boredom = 0;
 }
 
+void hunter_swap_device(struct House *house, struct Hunter *hunter) {
+}
+
 void hunter_take_turn(struct House *house, struct Hunter *hunter) {
     // 0. If the hunter is at the exit/van
     if (hunter->current_room->is_exit) {
@@ -47,6 +50,8 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
             hunter_exit(house, hunter);
             return;
         }
+        hunter_swap_device(house, hunter);
+        hunter_reset_path(hunter);
     }
 
     // 1. If there is a ghost in the current room
@@ -79,15 +84,25 @@ void hunter_exit(struct House *house, struct Hunter *hunter) {
     hunter->has_exit = true;
     hunter->current_room = NULL;
     house->hunter_count--;
+    hunter_clean_path(hunter);
+    log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
+}
 
-    struct RoomNode* agent = hunter->room_stack.head;
+void hunter_clean_path(struct Hunter *hunter) {
+    struct RoomNode *agent = hunter->room_stack.head;
     while (agent != NULL) {
-        struct RoomNode* next = agent->next;  // save the link first
+        struct RoomNode *next = agent->next; // save the link first
         free(agent);
         agent = next;
     }
+}
 
-    log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
+void hunter_reset_path(struct Hunter *hunter) {
+    hunter_clean_path(hunter);
+    struct RoomNode* new_node = malloc(sizeof(struct RoomNode));
+    new_node->room = hunter->starting_room;
+    new_node->next=NULL;
+    hunter->room_stack.head = new_node;
 }
 
 void hunter_move(struct Hunter *hunter) {

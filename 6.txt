@@ -1,0 +1,13 @@
+goober_snail
+1
+wobble_frog
+2
+blibber_duck
+3
+snickerdoodle
+4
+florp_nugget
+5
+zigzag_moose
+6
+done
