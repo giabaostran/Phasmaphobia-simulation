@@ -36,7 +36,12 @@ void hunter_gets_scared(struct Hunter *hunter) {
     hunter->boredom = 0;
 }
 
-void hunter_swap_device(struct House *house, struct Hunter *hunter) {
+void hunter_swap_device(struct Hunter *hunter) {
+    EvidenceByte new_device;
+    EvidenceByte old_device = hunter->device;
+    while ((new_device = hunter_receives_device()) == hunter->device);
+    hunter->device = new_device;
+    log_swap(hunter->id, hunter->boredom, hunter->fear, old_device, new_device);
 }
 
 void hunter_take_turn(struct House *house, struct Hunter *hunter) {
@@ -50,7 +55,10 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
             hunter_exit(house, hunter);
             return;
         }
-        hunter_swap_device(house, hunter);
+        // Simulate random rare decicision to swap weapon
+        bool random_swap = rand() % 5;
+        if (random_swap)
+            hunter_swap_device(hunter);
         hunter_reset_path(hunter);
     }
 
@@ -99,10 +107,15 @@ void hunter_clean_path(struct Hunter *hunter) {
 
 void hunter_reset_path(struct Hunter *hunter) {
     hunter_clean_path(hunter);
-    struct RoomNode* new_node = malloc(sizeof(struct RoomNode));
+    struct RoomNode *new_node = malloc(sizeof(struct RoomNode));
     new_node->room = hunter->starting_room;
-    new_node->next=NULL;
+    new_node->next = NULL;
     hunter->room_stack.head = new_node;
+}
+
+struct Room *hunter_pick_random_room(struct Room * room) {
+    int rand_room = rand() % room->connection_count;
+    return room->connected_rooms[rand_room];
 }
 
 void hunter_move(struct Hunter *hunter) {
@@ -122,12 +135,11 @@ void hunter_move(struct Hunter *hunter) {
     } else // case is not solved so keep moving the rooms in search of evidence
     {
         // Pick a connected room randomly
-        int rand_room = rand() % old_room->connection_count;
-        new_room = old_room->connected_rooms[rand_room];
-        // Add the new room to his path histtory
+        new_room = hunter_pick_random_room(old_room);
+        // Add the new room to his path history
         struct RoomNode *new_room_node = malloc(sizeof(struct RoomNode));
         new_room_node->room = new_room;
-        new_room_node->next = hunter->room_stack.head;
+        new_room_node->next = hunter->room_stack.head;\
         // Update the stack head
         hunter->room_stack.head = new_room_node;
     }
