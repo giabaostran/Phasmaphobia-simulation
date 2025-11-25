@@ -23,7 +23,7 @@ void ghost_init(struct House *house, struct Ghost *ghost);
  *
  * @param ghost  Pointer to the ghost acting this turn.
  */
-void ghost_take_turn(struct Ghost *ghost);
+void ghost_take_turn(struct House *house, struct Ghost *ghost);
 
 /**
  * Moves the ghost from its current room to one of the connected rooms randomly.
@@ -32,7 +32,7 @@ void ghost_take_turn(struct Ghost *ghost);
  *
  * @return       Nothing. The ghost's current_room is updated.
  */
-void ghost_move(struct Ghost *ghost);
+void ghost_move(struct House *house, struct Ghost *ghost);
 
 /**
  *  Simulate ghost behavior of haunting a room, leaving a permanent artifact to the room its currently in

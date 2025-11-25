@@ -1,17 +1,16 @@
 #include "hunter.h"
 
-void hunter_init(struct House *house, char *name, int id)
-{
+void hunter_init(struct House *house, char *name, int id) {
     struct Hunter *hunter = malloc(sizeof(struct Hunter));
-    strcpy(hunter->name, name);
 
+    strcpy(hunter->name, name);
     hunter->id = id;
     hunter->fear = 0;
     hunter->boredom = 0;
     hunter->has_exit = false;
     hunter->starting_room = hunter->current_room = &house->rooms[0];
     hunter->case_file = house->case_file;
-    hunter->device = 1 << (rand() % EVIDENCE_TYPE_COUNT);
+    hunter->device = hunter_receives_device();
 
     struct RoomNode *room_node = malloc(sizeof(struct RoomNode));
     room_node->room = &house->rooms[0];
@@ -22,71 +21,90 @@ void hunter_init(struct House *house, char *name, int id)
     node->next = house->hunters.head;
     node->hunter = hunter;
     house->hunters.head = node;
+    house->starting_room->hunters[house->starting_room->hunter_count++] = node->hunter;
+    house->hunter_count++;
     log_hunter_init(hunter->id, hunter->current_room->name, hunter->name, hunter->device);
 }
 
-void hunter_gets_scared(struct Hunter *hunter)
-{
+EvidenceByte hunter_receives_device() {
+    return 1 << (rand() % EVIDENCE_TYPE_COUNT);
+}
+
+void hunter_gets_scared(struct Hunter *hunter) {
     hunter->fear++;
     // They are too scared to be bored
     hunter->boredom = 0;
 }
 
-void hunter_take_turn(struct Hunter *hunter)
-{
-
-    // 1. If there is a ghost in the current room
-    if (hunter->current_room->ghost != NULL)
-    {
-        hunter_gets_scared(hunter);
-        // 2. If the hunter is too scared he will leave the simulation
-        if (hunter->fear >= HUNTER_FEAR_MAX)
-        {
-            hunter->exit_reason = LR_AFRAID;
-            hunter_exit(hunter);
+void hunter_take_turn(struct House *house, struct Hunter *hunter) {
+    // 0. If the hunter is at the exit/van
+    if (hunter->current_room->is_exit) {
+        // If the ghost has been identified
+        if (hunter->case_file->solved) {
+            // Set hunter exit reason
+            hunter->exit_reason = LR_EVIDENCE;
+            // Exit
+            hunter_exit(house, hunter);
             return;
         }
     }
+
+    // 1. If there is a ghost in the current room
+    if (hunter->current_room->ghost != NULL) {
+        hunter_gets_scared(hunter);
+        // If the hunter is too scared he will leave the simulation
+        if (hunter->fear >= HUNTER_FEAR_MAX) {
+            hunter->exit_reason = LR_AFRAID;
+            hunter_exit(house, hunter);
+            return;
+        }
+    }
+
     // 2. If the hunter is too scared or if too bored he will leave the simulation
-    else if (++hunter->boredom >= ENTITY_BOREDOM_MAX)
-    {
+    else if (++hunter->boredom >= ENTITY_BOREDOM_MAX) {
         hunter->exit_reason = LR_BORED;
-        hunter_exit(hunter);
+        hunter_exit(house, hunter);
         return;
     }
-    // 3. If user still brave enough to stay
+    // 3. If user still brave enough to stay or not too bored
     hunter_get_evidence(hunter);
 
     // 4. Time to keep moving
     hunter_move(hunter);
 }
 
-void hunter_exit(struct Hunter *hunter)
-{
+void hunter_exit(struct House *house, struct Hunter *hunter) {
     struct Room *current_room = hunter->current_room;
     room_remove_hunter(hunter->current_room, hunter);
     hunter->has_exit = true;
     hunter->current_room = NULL;
+    house->hunter_count--;
+
+    struct RoomNode* agent = hunter->room_stack.head;
+    while (agent != NULL) {
+        struct RoomNode* next = agent->next;  // save the link first
+        free(agent);
+        agent = next;
+    }
+
     log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
 }
 
-void hunter_move(struct Hunter *hunter)
-{
+void hunter_move(struct Hunter *hunter) {
     struct Room *old_room = hunter->current_room;
     struct Room *new_room;
 
     // If case is solved, the hunter make their way back to the exit room
-    if (hunter->case_file->solved == true)
-    {
+    if (hunter->case_file->solved == true) {
         // Store the head because we will lost track of it
         struct RoomNode *old_room_node = hunter->room_stack.head;
         // Remove reference to the top room on the stack
         hunter->room_stack.head = hunter->room_stack.head->next;
         // Free the un-used room node
         free(old_room_node);
+
         new_room = hunter->room_stack.head->room;
-    }
-    else // case is not solved so keep moving the rooms in search of evidence
+    } else // case is not solved so keep moving the rooms in search of evidence
     {
         // Pick a connected room randomly
         int rand_room = rand() % old_room->connection_count;
@@ -98,22 +116,21 @@ void hunter_move(struct Hunter *hunter)
         // Update the stack head
         hunter->room_stack.head = new_room_node;
     }
-
     // Remove hunter from old room
     room_remove_hunter(old_room, hunter);
-
     // Move hunter
     hunter->current_room = new_room;
-
     // Add hunter to new room
     new_room->hunters[new_room->hunter_count++] = hunter;
-
     // Log move
-    log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
+    if (hunter->current_room->is_exit)
+        log_return_to_van(hunter->id, hunter->boredom, hunter->fear, old_room->name, hunter->device,
+                          hunter->case_file->solved);
+    else
+        log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
 }
 
-void hunter_get_evidence(struct Hunter *hunter)
-{
+void hunter_get_evidence(struct Hunter *hunter) {
     enum EvidenceType evidence = hunter->device & hunter->current_room->evidence;
     // If no evidenxe is found
     if (evidence == 0)
@@ -128,4 +145,5 @@ void hunter_get_evidence(struct Hunter *hunter)
     // If all evidence has been recoreded then case is solved
     if (++hunter->case_file->evidence_found == EVIDENCE_PER_GHOST)
         hunter->case_file->solved = true;
+    log_evidence(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device);
 }

@@ -32,13 +32,13 @@ void ghost_init(struct House *house, struct Ghost *ghost)
 {
     // Initialization
     ghost->id = DEFAULT_GHOST_ID;
-    ghost->type = ghost_list[rand() % GHOST_TYPE_COUNT]; // This value is hard-coded for now
+    ghost->type = ghost_list[rand() % GHOST_TYPE_COUNT - 1]; // This value is hard-coded for now
     ghost->boredom = 0;
-    ghost->has_exit = false;            // determine if a ghost has exit the simulation
-    int r = rand() % house->room_count; // pick a random room to spaw the ghost in
+    ghost->has_exit = false;                        // determine if a ghost has exit the simulation
+    int r = (rand() % (house->room_count - 1)) + 1; // pick a random room to spaw the ghost in, except the exit room
     // Randomly spawn ghost to a room
     ghost->current_room = &house->rooms[r];
-
+    ghost->current_room->ghost = ghost;
     // Log ghost initialization
     log_ghost_init(ghost->id, ghost->current_room->name, ghost->type);
 }
@@ -85,11 +85,15 @@ void ghost_haunt(struct Ghost *ghost)
     log_ghost_evidence(ghost->id, ghost->boredom, current_room->name, mask);
 };
 
-void ghost_move(struct Ghost *ghost)
+void ghost_move(struct House *house, struct Ghost *ghost)
 {
     struct Room *current_room = ghost->current_room;
+    int rand_room;
     // Pick a random room to move to
-    int rand_room = rand() % current_room->connection_count;
+    while (current_room->connected_rooms[(rand_room = rand() % current_room->connection_count)] == house->starting_room)
+        ;
+
+
     // Move the ghost to the next-room
     ghost->current_room = current_room->connected_rooms[rand_room];
     // Make ghost presensence known to the room it just moves to
@@ -117,7 +121,7 @@ void ghost_idle(struct Ghost *ghost)
     log_ghost_idle(ghost->id, ghost->boredom, ghost->current_room->name);
 }
 
-void ghost_take_turn(struct Ghost *ghost)
+void ghost_take_turn(struct House *house, struct Ghost *ghost)
 {
 
     // 1. ENFORCED ACTION: if any hunter is presenting in the room, ghost must scare them
@@ -142,7 +146,7 @@ void ghost_take_turn(struct Ghost *ghost)
         break;
 
     case 1: // Move to the next room
-        ghost_move(ghost);
+        ghost_move(house, ghost);
         break;
 
     default: // Ghost idle doing nothing

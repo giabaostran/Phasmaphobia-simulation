@@ -22,7 +22,7 @@
 #define MAX_CONNECTIONS 8
 #define GHOST_TYPE_COUNT 24
 #define EVIDENCE_TYPE_COUNT 7
-#define ENTITY_BOREDOM_MAX 15
+#define ENTITY_BOREDOM_MAX 50
 #define HUNTER_FEAR_MAX 15
 #define DEFAULT_GHOST_ID 68057
 
@@ -87,7 +87,7 @@ struct Room
 {
     char name[MAX_ROOM_NAME];
     struct Room *connected_rooms[MAX_ROOMS];
-    unsigned char connection_count;
+    int connection_count;
     struct Ghost *ghost;
     struct Hunter *hunters[MAX_ROOM_OCCUPANCY];
     int hunter_count;
@@ -100,7 +100,7 @@ struct RoomNode
     struct Room *room;
     struct RoomNode *next;
 
-} RoomNode;
+} ;
 
 struct RoomStack
 {
@@ -149,7 +149,6 @@ struct House
     struct Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
     struct HunterArray hunters;
     struct CaseFile *case_file;
-    struct Ghost ghost;
     int room_count;
     int hunter_count;
 };
