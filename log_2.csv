@@ -1,0 +1,38 @@
+1764031259108,hunter,2,Van,prints,0,0,INIT,2
+1764031267095,hunter,2,Van,prints,1,0,MOVE,Hallway
+1764031267116,hunter,2,Hallway,prints,0,1,MOVE,Bathroom
+1764031267137,hunter,2,Bathroom,prints,1,1,MOVE,Hallway
+1764031267158,hunter,2,Hallway,prints,2,1,MOVE,Bathroom
+1764031267179,hunter,2,Bathroom,prints,3,1,MOVE,Hallway
+1764031267200,hunter,2,Hallway,prints,0,2,MOVE,Boy's Bedroom
+1764031267221,hunter,2,Boy's Bedroom,prints,1,2,MOVE,Hallway
+1764031267242,hunter,2,Hallway,prints,0,3,MOVE,Van
+1764031267262,hunter,2,Van,prints,1,3,MOVE,Hallway
+1764031267283,hunter,2,Hallway,prints,0,4,MOVE,Basement
+1764031267303,hunter,2,Basement,prints,1,4,MOVE,Basement Hallway
+1764031267324,hunter,2,Basement Hallway,prints,2,4,MOVE,Left Storage Room
+1764031267345,hunter,2,Left Storage Room,prints,3,4,MOVE,Basement Hallway
+1764031267365,hunter,2,Basement Hallway,prints,4,4,MOVE,Right Storage Room
+1764031267386,hunter,2,Right Storage Room,prints,5,4,MOVE,Basement Hallway
+1764031267407,hunter,2,Basement Hallway,prints,6,4,MOVE,Basement
+1764031267428,hunter,2,Basement,prints,7,4,MOVE,Hallway
+1764031267448,hunter,2,Hallway,prints,0,5,MOVE,Kitchen
+1764031267469,hunter,2,Kitchen,prints,1,5,MOVE,Garage
+1764031267490,hunter,2,Garage,prints,2,5,MOVE,Kitchen
+1764031267511,hunter,2,Kitchen,prints,3,5,MOVE,Hallway
+1764031267532,hunter,2,Hallway,prints,0,6,MOVE,Kitchen
+1764031267552,hunter,2,Kitchen,prints,1,6,MOVE,Garage
+1764031267573,hunter,2,Garage,prints,2,6,MOVE,Utility Room
+1764031267594,hunter,2,Utility Room,prints,3,6,MOVE,Garage
+1764031267615,hunter,2,Garage,prints,4,6,MOVE,Utility Room
+1764031267636,hunter,2,Utility Room,prints,5,6,MOVE,Garage
+1764031267656,hunter,2,Garage,prints,6,6,MOVE,Kitchen
+1764031267677,hunter,2,Kitchen,prints,7,6,MOVE,Living Room
+1764031267698,hunter,2,Living Room,prints,8,6,MOVE,Kitchen
+1764031267718,hunter,2,Kitchen,prints,9,6,MOVE,Garage
+1764031267739,hunter,2,Garage,prints,10,6,MOVE,Kitchen
+1764031267760,hunter,2,Kitchen,prints,11,6,MOVE,Living Room
+1764031267781,hunter,2,Living Room,prints,12,6,MOVE,Kitchen
+1764031267801,hunter,2,Kitchen,prints,13,6,MOVE,Living Room
+1764031267822,hunter,2,Living Room,prints,14,6,MOVE,Kitchen
+1764031267843,hunter,2,Kitchen,prints,15,6,EXIT,bored

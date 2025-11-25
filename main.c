@@ -18,7 +18,7 @@ int main()
     srand(time(NULL));
 
     // 1. Initialize a House structure.
-    struct CaseFile case_file;
+    struct CaseFile case_file = {.evidence_found=0,.solved=false};
     struct House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
@@ -30,25 +30,33 @@ int main()
 
     while (house.hunter_count != MAX_ROOM_OCCUPANCY)
     {
-        printf("Enter name: ");
+        printf("Enter hunter name (max 63 characters) or 'done' to finish: ");
         fgets(buffer, MAX_HUNTER_NAME, stdin);
         buffer[strcspn(buffer, "\n")] = '\0'; // remove new line char from buffer
         if (strcasecmp(buffer, "done") == 0)
             break;
-        hunter_init(&house, buffer);
-    }
 
-    struct HunterNode *node = house.hunters.head;
-    while (node != NULL)
-    {
-        printf("%s\n", node->hunter->name);
-        node = node->next;
-    }
+        int id;
+        printf("Enter hunter ID (Integer): ");
+        scanf("%d", &id);
+        while (getchar() != '\n') // Clean the input stream buffer
+            ;
 
-    while (ghost.boredom != ENTITY_BOREDOM_MAX)
+        hunter_init(&house, buffer, id);
+    }
+    printf("==== GAME START =====\n");
+    while (ghost.boredom != ENTITY_BOREDOM_MAX && house.case_file->solved == false)
     {
         ghost_take_turn(&ghost);
+        struct HunterNode *agent = house.hunters.head;
+        while (agent != NULL)
+        {
+            if (agent->hunter->has_exit == false)
+                hunter_take_turn(agent->hunter);
+            agent = agent->next;
+        }
     }
+    printf("%d", house.rooms[0].connection_count);
 
     return 0;
 }

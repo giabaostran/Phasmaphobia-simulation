@@ -1,0 +1,63 @@
+1764031261631,hunter,4,Van,prints,0,0,INIT,4
+1764031267089,hunter,4,Van,prints,1,0,MOVE,Hallway
+1764031267111,hunter,4,Hallway,prints,0,1,MOVE,Basement
+1764031267132,hunter,4,Basement,prints,1,1,MOVE,Basement Hallway
+1764031267153,hunter,4,Basement Hallway,prints,2,1,MOVE,Left Storage Room
+1764031267174,hunter,4,Left Storage Room,prints,3,1,MOVE,Basement Hallway
+1764031267195,hunter,4,Basement Hallway,prints,4,1,MOVE,Basement
+1764031267216,hunter,4,Basement,prints,5,1,MOVE,Hallway
+1764031267236,hunter,4,Hallway,prints,0,2,MOVE,Basement
+1764031267257,hunter,4,Basement,prints,1,2,MOVE,Hallway
+1764031267277,hunter,4,Hallway,prints,0,3,MOVE,Boy's Bedroom
+1764031267298,hunter,4,Boy's Bedroom,prints,1,3,MOVE,Hallway
+1764031267319,hunter,4,Hallway,prints,0,4,MOVE,Master Bedroom
+1764031267339,hunter,4,Master Bedroom,prints,1,4,MOVE,Hallway
+1764031267360,hunter,4,Hallway,prints,0,5,MOVE,Kitchen
+1764031267381,hunter,4,Kitchen,prints,1,5,MOVE,Garage
+1764031267401,hunter,4,Garage,prints,2,5,MOVE,Utility Room
+1764031267422,hunter,4,Utility Room,prints,3,5,MOVE,Garage
+1764031267443,hunter,4,Garage,prints,4,5,MOVE,Kitchen
+1764031267464,hunter,4,Kitchen,prints,5,5,MOVE,Garage
+1764031267485,hunter,4,Garage,prints,6,5,MOVE,Kitchen
+1764031267506,hunter,4,Kitchen,prints,7,5,MOVE,Hallway
+1764031267526,hunter,4,Hallway,prints,0,6,MOVE,Basement
+1764031267547,hunter,4,Basement,prints,0,7,MOVE,Hallway
+1764031267568,hunter,4,Hallway,prints,1,7,MOVE,Master Bedroom
+1764031267589,hunter,4,Master Bedroom,prints,2,7,MOVE,Hallway
+1764031267609,hunter,4,Hallway,prints,0,8,MOVE,Boy's Bedroom
+1764031267630,hunter,4,Boy's Bedroom,prints,0,9,MOVE,Hallway
+1764031267651,hunter,4,Hallway,prints,0,10,MOVE,Kitchen
+1764031267672,hunter,4,Kitchen,prints,1,10,MOVE,Garage
+1764031267692,hunter,4,Garage,prints,2,10,MOVE,Kitchen
+1764031267713,hunter,4,Kitchen,prints,3,10,MOVE,Living Room
+1764031267734,hunter,4,Living Room,prints,4,10,MOVE,Kitchen
+1764031267755,hunter,4,Kitchen,prints,5,10,MOVE,Living Room
+1764031267775,hunter,4,Living Room,prints,6,10,MOVE,Kitchen
+1764031267796,hunter,4,Kitchen,prints,7,10,MOVE,Living Room
+1764031267817,hunter,4,Living Room,prints,8,10,MOVE,Kitchen
+1764031267838,hunter,4,Kitchen,prints,9,10,MOVE,Living Room
+1764031267856,hunter,4,Living Room,prints,10,10,MOVE,Kitchen
+1764031267871,hunter,4,Kitchen,prints,11,10,MOVE,Hallway
+1764031267887,hunter,4,Hallway,prints,12,10,MOVE,Boy's Bedroom
+1764031267903,hunter,4,Boy's Bedroom,prints,13,10,MOVE,Hallway
+1764031267918,hunter,4,Hallway,prints,0,11,MOVE,Bathroom
+1764031267931,hunter,4,Bathroom,prints,1,11,MOVE,Hallway
+1764031267944,hunter,4,Hallway,prints,0,12,MOVE,Van
+1764031267957,hunter,4,Van,prints,1,12,MOVE,Hallway
+1764031267970,hunter,4,Hallway,prints,2,12,MOVE,Basement
+1764031267983,hunter,4,Basement,prints,0,13,MOVE,Basement Hallway
+1764031267996,hunter,4,Basement Hallway,prints,1,13,MOVE,Left Storage Room
+1764031268009,hunter,4,Left Storage Room,prints,2,13,MOVE,Basement Hallway
+1764031268020,hunter,4,Basement Hallway,prints,3,13,MOVE,Basement
+1764031268027,hunter,4,Basement,prints,4,13,MOVE,Basement Hallway
+1764031268035,hunter,4,Basement Hallway,prints,5,13,MOVE,Basement
+1764031268043,hunter,4,Basement,prints,6,13,MOVE,Basement Hallway
+1764031268051,hunter,4,Basement Hallway,prints,7,13,MOVE,Left Storage Room
+1764031268059,hunter,4,Left Storage Room,prints,8,13,MOVE,Basement Hallway
+1764031268067,hunter,4,Basement Hallway,prints,9,13,MOVE,Basement
+1764031268074,hunter,4,Basement,prints,10,13,MOVE,Basement Hallway
+1764031268082,hunter,4,Basement Hallway,prints,11,13,MOVE,Basement
+1764031268090,hunter,4,Basement,prints,12,13,MOVE,Basement Hallway
+1764031268097,hunter,4,Basement Hallway,prints,13,13,MOVE,Right Storage Room
+1764031268105,hunter,4,Right Storage Room,prints,14,13,MOVE,Basement Hallway
+1764031268113,hunter,4,Basement Hallway,prints,15,13,EXIT,bored

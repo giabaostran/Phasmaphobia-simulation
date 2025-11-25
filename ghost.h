@@ -1,6 +1,7 @@
 #include "defs.h"
 #include "log.h"
 
+enum GhostType ghost_list[GHOST_TYPE_COUNT];
 
 /**
  * Initializes a Ghost structure and spawns it in a random room.

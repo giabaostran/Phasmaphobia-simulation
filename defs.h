@@ -18,6 +18,7 @@
 #define MAX_HUNTER_NAME 64
 #define MAX_ROOMS 24
 #define MAX_ROOM_OCCUPANCY 8
+#define EVIDENCE_PER_GHOST 3
 #define MAX_CONNECTIONS 8
 #define GHOST_TYPE_COUNT 24
 #define EVIDENCE_TYPE_COUNT 7
@@ -76,6 +77,7 @@ enum GhostType
 struct CaseFile
 {
     EvidenceByte collected; // Union of all of the evidence bits collected between all hunters
+    unsigned char evidence_found;
     bool solved;            // True when >=3 unique bits set
     sem_t mutex;            // Used for synchronizing both fields when multithreading
 };
@@ -85,7 +87,7 @@ struct Room
 {
     char name[MAX_ROOM_NAME];
     struct Room *connected_rooms[MAX_ROOMS];
-    int connection_count;
+    unsigned char connection_count;
     struct Ghost *ghost;
     struct Hunter *hunters[MAX_ROOM_OCCUPANCY];
     int hunter_count;
@@ -110,6 +112,7 @@ struct Hunter
     int id;
     char name[MAX_HUNTER_NAME];
     struct Room *current_room;
+    struct Room *starting_room;
     struct CaseFile *case_file;
     EvidenceByte device;
     struct RoomStack room_stack;

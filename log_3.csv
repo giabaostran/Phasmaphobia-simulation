@@ -1,0 +1,42 @@
+1764031260112,hunter,3,Van,writing,0,0,INIT,3
+1764031267092,hunter,3,Van,writing,1,0,MOVE,Hallway
+1764031267114,hunter,3,Hallway,writing,0,1,MOVE,Bathroom
+1764031267135,hunter,3,Bathroom,writing,1,1,MOVE,Hallway
+1764031267156,hunter,3,Hallway,writing,2,1,MOVE,Kitchen
+1764031267177,hunter,3,Kitchen,writing,3,1,MOVE,Hallway
+1764031267198,hunter,3,Hallway,writing,0,2,MOVE,Boy's Bedroom
+1764031267218,hunter,3,Boy's Bedroom,writing,1,2,MOVE,Hallway
+1764031267239,hunter,3,Hallway,writing,0,3,MOVE,Van
+1764031267260,hunter,3,Van,writing,1,3,MOVE,Hallway
+1764031267280,hunter,3,Hallway,writing,0,4,MOVE,Van
+1764031267300,hunter,3,Van,writing,1,4,MOVE,Hallway
+1764031267321,hunter,3,Hallway,writing,0,5,MOVE,Basement
+1764031267342,hunter,3,Basement,writing,1,5,MOVE,Basement Hallway
+1764031267363,hunter,3,Basement Hallway,writing,2,5,MOVE,Left Storage Room
+1764031267383,hunter,3,Left Storage Room,writing,3,5,MOVE,Basement Hallway
+1764031267404,hunter,3,Basement Hallway,writing,4,5,MOVE,Left Storage Room
+1764031267425,hunter,3,Left Storage Room,writing,5,5,MOVE,Basement Hallway
+1764031267446,hunter,3,Basement Hallway,writing,6,5,MOVE,Basement
+1764031267467,hunter,3,Basement,writing,7,5,MOVE,Hallway
+1764031267488,hunter,3,Hallway,writing,0,6,MOVE,Bathroom
+1764031267508,hunter,3,Bathroom,writing,1,6,MOVE,Hallway
+1764031267529,hunter,3,Hallway,writing,0,7,MOVE,Master Bedroom
+1764031267550,hunter,3,Master Bedroom,writing,1,7,MOVE,Hallway
+1764031267570,hunter,3,Hallway,writing,2,7,MOVE,Boy's Bedroom
+1764031267591,hunter,3,Boy's Bedroom,writing,3,7,MOVE,Hallway
+1764031267612,hunter,3,Hallway,writing,0,8,MOVE,Basement
+1764031267633,hunter,3,Basement,writing,1,8,MOVE,Basement Hallway
+1764031267654,hunter,3,Basement Hallway,writing,2,8,MOVE,Left Storage Room
+1764031267674,hunter,3,Left Storage Room,writing,3,8,MOVE,Basement Hallway
+1764031267695,hunter,3,Basement Hallway,writing,4,8,MOVE,Right Storage Room
+1764031267716,hunter,3,Right Storage Room,writing,5,8,MOVE,Basement Hallway
+1764031267736,hunter,3,Basement Hallway,writing,6,8,MOVE,Right Storage Room
+1764031267757,hunter,3,Right Storage Room,writing,7,8,MOVE,Basement Hallway
+1764031267778,hunter,3,Basement Hallway,writing,8,8,MOVE,Basement
+1764031267799,hunter,3,Basement,writing,9,8,MOVE,Hallway
+1764031267820,hunter,3,Hallway,writing,10,8,MOVE,Van
+1764031267840,hunter,3,Van,writing,11,8,MOVE,Hallway
+1764031267858,hunter,3,Hallway,writing,12,8,MOVE,Boy's Bedroom
+1764031267874,hunter,3,Boy's Bedroom,writing,13,8,MOVE,Hallway
+1764031267890,hunter,3,Hallway,writing,14,8,MOVE,Van
+1764031267905,hunter,3,Van,writing,15,8,EXIT,bored

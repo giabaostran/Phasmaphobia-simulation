@@ -1,6 +1,5 @@
 #include "ghost.h"
 
-
 // Array-based ghost list for random access
 enum GhostType ghost_list[] = {
     GH_POLTERGEIST,
@@ -35,8 +34,8 @@ void ghost_init(struct House *house, struct Ghost *ghost)
     ghost->id = DEFAULT_GHOST_ID;
     ghost->type = ghost_list[rand() % GHOST_TYPE_COUNT]; // This value is hard-coded for now
     ghost->boredom = 0;
-    ghost->has_exit = false; // determine if a ghost has exit the si
-    int r = rand() % house->room_count;
+    ghost->has_exit = false;            // determine if a ghost has exit the simulation
+    int r = rand() % house->room_count; // pick a random room to spaw the ghost in
     // Randomly spawn ghost to a room
     ghost->current_room = &house->rooms[r];
 
@@ -53,13 +52,22 @@ void ghost_scare(struct Ghost *ghost)
 {
     // Ghost is scaring someone, very excited thusby
     ghost->boredom = 0;
+    int option = rand() % 2;
+    switch (option)
+    {
+    case 0: // Haunt the current room
+        ghost_haunt(ghost);
+        break;
+
+    default: // Ghost idle doing nothing
+        ghost_idle(ghost);
+        break;
+    }
 }
 
 void ghost_haunt(struct Ghost *ghost)
 {
-
     struct Room *current_room = ghost->current_room;
-    // current_room->evidence = ghost;
 
     // Randomly choose one of the evidence of the ghost to leave at the room
     unsigned char count = rand() % 3 + 1;
@@ -73,6 +81,7 @@ void ghost_haunt(struct Ghost *ghost)
                 break;
         mask <<= 1;
     }
+    current_room->evidence |= mask;
     log_ghost_evidence(ghost->id, ghost->boredom, current_room->name, mask);
 };
 
@@ -93,9 +102,14 @@ void ghost_move(struct Ghost *ghost)
 
 void ghost_exit(struct Ghost *ghost)
 {
+    struct Room *current_room = ghost->current_room;
     ghost->has_exit = true;
+    // Remove ghost presence from the room
+    ghost->current_room->ghost = NULL;
+    // Ghost no longer in any room
     ghost->current_room = NULL;
-    log_ghost_exit(ghost->id, ghost->boredom, ghost->current_room->name);
+    // Log
+    log_ghost_exit(ghost->id, ghost->boredom, current_room->name);
 }
 
 void ghost_idle(struct Ghost *ghost)
@@ -106,12 +120,9 @@ void ghost_idle(struct Ghost *ghost)
 void ghost_take_turn(struct Ghost *ghost)
 {
 
-    struct Room *room = ghost->current_room;
-
     // 1. ENFORCED ACTION: if any hunter is presenting in the room, ghost must scare them
     if (ghost->current_room->hunter_count > 0)
     {
-        printf("{}");
         ghost_scare(ghost);
         return;
     }

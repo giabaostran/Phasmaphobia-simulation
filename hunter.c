@@ -1,18 +1,17 @@
 #include "hunter.h"
 
-void hunter_init(struct House *house, char *name)
+void hunter_init(struct House *house, char *name, int id)
 {
-    static int ID = 1;
-
     struct Hunter *hunter = malloc(sizeof(struct Hunter));
-    hunter->id = ID++;
+    strcpy(hunter->name, name);
+
+    hunter->id = id;
     hunter->fear = 0;
     hunter->boredom = 0;
     hunter->has_exit = false;
-    hunter->current_room = &house->rooms[0];
+    hunter->starting_room = hunter->current_room = &house->rooms[0];
     hunter->case_file = house->case_file;
     hunter->device = 1 << (rand() % EVIDENCE_TYPE_COUNT);
-    strcpy(hunter->name, name);
 
     struct RoomNode *room_node = malloc(sizeof(struct RoomNode));
     room_node->room = &house->rooms[0];
@@ -24,4 +23,109 @@ void hunter_init(struct House *house, char *name)
     node->hunter = hunter;
     house->hunters.head = node;
     log_hunter_init(hunter->id, hunter->current_room->name, hunter->name, hunter->device);
+}
+
+void hunter_gets_scared(struct Hunter *hunter)
+{
+    hunter->fear++;
+    // They are too scared to be bored
+    hunter->boredom = 0;
+}
+
+void hunter_take_turn(struct Hunter *hunter)
+{
+
+    // 1. If there is a ghost in the current room
+    if (hunter->current_room->ghost != NULL)
+    {
+        hunter_gets_scared(hunter);
+        // 2. If the hunter is too scared he will leave the simulation
+        if (hunter->fear >= HUNTER_FEAR_MAX)
+        {
+            hunter->exit_reason = LR_AFRAID;
+            hunter_exit(hunter);
+            return;
+        }
+    }
+    // 2. If the hunter is too scared or if too bored he will leave the simulation
+    else if (++hunter->boredom >= ENTITY_BOREDOM_MAX)
+    {
+        hunter->exit_reason = LR_BORED;
+        hunter_exit(hunter);
+        return;
+    }
+    // 3. If user still brave enough to stay
+    hunter_get_evidence(hunter);
+
+    // 4. Time to keep moving
+    hunter_move(hunter);
+}
+
+void hunter_exit(struct Hunter *hunter)
+{
+    struct Room *current_room = hunter->current_room;
+    room_remove_hunter(hunter->current_room, hunter);
+    hunter->has_exit = true;
+    hunter->current_room = NULL;
+    log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
+}
+
+void hunter_move(struct Hunter *hunter)
+{
+    struct Room *old_room = hunter->current_room;
+    struct Room *new_room;
+
+    // If case is solved, the hunter make their way back to the exit room
+    if (hunter->case_file->solved == true)
+    {
+        // Store the head because we will lost track of it
+        struct RoomNode *old_room_node = hunter->room_stack.head;
+        // Remove reference to the top room on the stack
+        hunter->room_stack.head = hunter->room_stack.head->next;
+        // Free the un-used room node
+        free(old_room_node);
+        new_room = hunter->room_stack.head->room;
+    }
+    else // case is not solved so keep moving the rooms in search of evidence
+    {
+        // Pick a connected room randomly
+        int rand_room = rand() % old_room->connection_count;
+        new_room = old_room->connected_rooms[rand_room];
+        // Add the new room to his path histtory
+        struct RoomNode *new_room_node = malloc(sizeof(struct RoomNode));
+        new_room_node->room = new_room;
+        new_room_node->next = hunter->room_stack.head;
+        // Update the stack head
+        hunter->room_stack.head = new_room_node;
+    }
+
+    // Remove hunter from old room
+    room_remove_hunter(old_room, hunter);
+
+    // Move hunter
+    hunter->current_room = new_room;
+
+    // Add hunter to new room
+    new_room->hunters[new_room->hunter_count++] = hunter;
+
+    // Log move
+    log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
+}
+
+void hunter_get_evidence(struct Hunter *hunter)
+{
+    enum EvidenceType evidence = hunter->device & hunter->current_room->evidence;
+    // If no evidenxe is found
+    if (evidence == 0)
+        return;
+    // Clear the evidence from the room
+    hunter->current_room->evidence &= ~evidence;
+    // If such evidence is already recorded, ignore it
+    if ((hunter->case_file->collected & evidence) != 0)
+        return;
+    // Record the evidence in the log book
+    hunter->case_file->collected |= evidence;
+    // If all evidence has been recoreded then case is solved
+    if (++hunter->case_file->evidence_found == EVIDENCE_PER_GHOST)
+        hunter->case_file->solved = true;
 }
