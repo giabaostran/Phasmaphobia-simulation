@@ -11,7 +11,7 @@ void hunter_init(House *house, char *name, int id) {
     hunter->starting_room = hunter->current_room = house->starting_room;
     hunter->case_file = house->case_file;
     hunter->device = hunter_receives_device();
-    hunter->found_evidence = false;
+    hunter->heading_home = false;
 
     RoomNode *room_node = malloc(sizeof(RoomNode));
     room_node->room = house->starting_room;
@@ -42,11 +42,9 @@ void hunter_swap_device(Hunter *hunter) {
     EvidenceByte new_device;
     EvidenceByte old_device = hunter->device;
     // Keep asking for a new weapon while it is the same as what the hunter is having
-    while ((new_device = hunter_receives_device()) == hunter->device);
+    while ((new_device = hunter_receives_device()) == old_device);
     // Give weapon to the hunter
     hunter->device = new_device;
-    // Reset the flag indicating he hasn't found any evidence with the new device
-    hunter->found_evidence = false;
     // Log
     log_swap(hunter->id, hunter->boredom, hunter->fear, old_device, new_device);
 }
@@ -54,6 +52,8 @@ void hunter_swap_device(Hunter *hunter) {
 void hunter_take_turn(House *house, Hunter *hunter) {
     // 0. If the hunter is at the exit/van
     if (hunter->current_room->is_exit) {
+        // Clear his travel history and start fresh
+        hunter_reset_path(hunter);
         // If the ghost has been identified, then the hunter can now exit
         if (hunter->case_file->solved) {
             // Set hunter exit reason
@@ -63,12 +63,12 @@ void hunter_take_turn(House *house, Hunter *hunter) {
             hunter_exit(hunter);
             return;
         }
-        // If the current device has been used to find an evidence, swap it
-        if (hunter->found_evidence) {
+        // If the hunter intentionally heading home not for the case is solved, then he needs to swap device
+        if (hunter->heading_home) {
             hunter_swap_device(hunter);
+            // Already home so no need to head home again
+            hunter->heading_home = false;
         }
-        // Clear his travel history and start fresh
-        hunter_reset_path(hunter);
     }
 
     // 1. If there is a ghost in the current room
@@ -140,19 +140,23 @@ Room *hunter_pick_random_room(Room *room) {
 void hunter_move(Hunter *hunter) {
     Room *old_room = hunter->current_room;
     Room *new_room = NULL;
-    bool shortcut_found = false;
 
-    // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
-    if (hunter->case_file->solved || hunter->found_evidence) {
+    if (hunter->current_room->is_exit)
+        log_return_to_van(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device,
+                          hunter->heading_home);
+
+    // If case is solved, the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
+    if (hunter->heading_home) {
+        bool shortcut_found = false;
         // Proactively check if the current has any shortcut to the exit/van
-        Room *current_room = hunter->current_room;
-        for (int i = 0; i < current_room->connection_count; ++i) {
-            if (current_room->connected_rooms[i]->is_exit && hunter->starting_room->hunter_count < MAX_ROOM_OCCUPANCY) {
-                new_room = hunter->starting_room;
-                shortcut_found = true;
-                break;
-            }
-        }
+        // Room *current_room = hunter->current_room;
+        // for (int i = 0; i < current_room->connection_count; ++i) {
+        //     if (current_room->connected_rooms[i]->is_exit && hunter->starting_room->hunter_count < MAX_ROOM_OCCUPANCY) {
+        //         new_room = hunter->starting_room;
+        //         shortcut_found = true;
+        //         break;
+        //     }
+        // }
 
         if (!shortcut_found) {
             // Store the head because we will lose track of it
@@ -185,23 +189,18 @@ void hunter_move(Hunter *hunter) {
     // Move hunter
     room_add_hunter(new_room, hunter);
 
-    // Log move
-    if (new_room->is_exit)
-        log_return_to_van(hunter->id, hunter->boredom, hunter->fear, old_room->name, hunter->device,
-                          hunter->case_file->solved);
-    else
-        log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
+    log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
 }
 
 
 void hunter_get_evidence(Hunter *hunter) {
-    EvidenceType evidence = hunter->device & hunter->current_room->evidence;
+    const EvidenceType evidence = hunter->device & hunter->current_room->evidence;
     CaseFile *case_file = hunter->case_file;
     // If no evidence is found
     if (evidence == 0) {
         // there is a small random chance that the hunter will return to the van to change equipment if he fails here
         if (rand() % 7 == 0)
-            hunter->found_evidence = true;
+            hunter->heading_home = true;
         return;
     }
     // Clear the evidence from the room
@@ -211,9 +210,9 @@ void hunter_get_evidence(Hunter *hunter) {
         return;
     // Record the evidence in the log book
     case_file->collected |= evidence;
-    // Mark hunter has found some evidence with current tool
-    hunter->found_evidence = true;
-    // If all evidence has been recoreded then case is solved
+    // Mark hunter has found some evidence with current tool, so time to head home to swap weapon
+    hunter->heading_home = true;
+    // If all evidence has been recorded then case is solved
     if (evidence_is_valid_ghost(case_file->collected)) {
         case_file->solved = true;
         case_file->ghost = case_file->collected;

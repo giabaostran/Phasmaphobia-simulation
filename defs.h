@@ -126,7 +126,7 @@ struct Hunter {
     int boredom;
     LogReason exit_reason;
     bool has_exit;
-    bool found_evidence;
+    bool heading_home;
 };
 
 typedef struct HunterNode {
