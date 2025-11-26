@@ -95,7 +95,9 @@ void hunter_take_turn(House *house, Hunter *hunter) {
     }
 
     // 3. If user still brave enough to stay or not too bored
-    hunter_get_evidence(hunter);
+    // If at safehouse/exit then ghost can never be here, only gather otherwise
+    if (!hunter->current_room->is_exit)
+        hunter_get_evidence(hunter);
 
     // 4. Time to keep moving
     hunter_move(hunter);
@@ -137,7 +139,7 @@ Room *hunter_pick_random_room(Room *room) {
 
 void hunter_move(Hunter *hunter) {
     Room *old_room = hunter->current_room;
-    Room *new_room;
+    Room *new_room = NULL;
     bool shortcut_found = false;
 
     // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
@@ -145,8 +147,7 @@ void hunter_move(Hunter *hunter) {
         // Proactively check if the current has any shortcut to the exit/van
         Room *current_room = hunter->current_room;
         for (int i = 0; i < current_room->connection_count; ++i) {
-            if (current_room->connected_rooms[i] == hunter->starting_room && hunter->starting_room->hunter_count <
-                MAX_ROOM_OCCUPANCY) {
+            if (current_room->connected_rooms[i]->is_exit && hunter->starting_room->hunter_count < MAX_ROOM_OCCUPANCY) {
                 new_room = hunter->starting_room;
                 shortcut_found = true;
                 break;
@@ -197,8 +198,12 @@ void hunter_get_evidence(Hunter *hunter) {
     EvidenceType evidence = hunter->device & hunter->current_room->evidence;
     CaseFile *case_file = hunter->case_file;
     // If no evidence is found
-    if (evidence == 0)
+    if (evidence == 0) {
+        // there is a small random chance that the hunter will return to the van to change equipment if he fails here
+        if (rand() % 7 == 0)
+            hunter->found_evidence = true;
         return;
+    }
     // Clear the evidence from the room
     hunter->current_room->evidence &= ~evidence;
     // If such evidence is already recorded, ignore it
