@@ -71,7 +71,7 @@ enum GhostType
 struct CaseFile
 {
     EvidenceByte collected; // Union of all of the evidence bits collected between all hunters
-    unsigned char evidence_found;
+    int evidence_found;
     bool solved;            // True when >=3 unique bits set
     sem_t mutex;            // Used for synchronizing both fields when multithreading
 };
@@ -114,6 +114,7 @@ struct Hunter
     int boredom;
     enum LogReason exit_reason;
     bool has_exit;
+    bool found_evidence;
 };
 
 struct HunterArray

@@ -2,7 +2,6 @@
 #include "log.h"
 #include "helpers.h"
 
-
 /**
  * Initializes a Ghost structure and spawns it in a random room.
  *
@@ -76,3 +75,12 @@ bool ghost_find_hunter(struct Ghost *ghost);
  * @return      nothing
  */
 void ghost_idle(struct Ghost *ghost);
+
+/**
+ * Randomly choose a ghost to assign
+ *
+ * @param  Nothing 
+ *
+ * @return a ghost 
+ */
+enum GhostType ghost_random();

@@ -30,4 +30,5 @@ void room_remove_hunter(struct Room *room, struct Hunter *hunter)
             break;
         }
     }
+    hunter->current_room = NULL;
 }

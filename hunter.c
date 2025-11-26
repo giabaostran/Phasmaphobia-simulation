@@ -6,20 +6,22 @@ void hunter_init(struct House *house, char *name, int id) {
     hunter->id = id;
     hunter->boredom = hunter->fear = 0;
     hunter->has_exit = false;
-    hunter->starting_room = hunter->current_room = &house->rooms[0];
+    hunter->starting_room = hunter->current_room = house->starting_room;
     hunter->case_file = house->case_file;
     hunter->device = hunter_receives_device();
+    hunter->found_evidence = false;
 
     struct RoomNode *room_node = malloc(sizeof(struct RoomNode));
-    room_node->room = &house->rooms[0];
+    room_node->room = house->starting_room;
     room_node->next = NULL;
     hunter->room_stack.head = room_node;
 
-    struct HunterNode *node = malloc(sizeof(struct HunterNode));
-    node->next = house->hunters.head;
-    node->hunter = hunter;
-    house->hunters.head = node;
-    house->starting_room->hunters[house->starting_room->hunter_count++] = node->hunter;
+    struct HunterNode *hunter_node = malloc(sizeof(struct HunterNode));
+    hunter_node->next = house->hunters.head;
+    hunter_node->hunter = hunter;
+    house->hunters.head = hunter_node;
+    // This only exception allow more hunter than the limit to be in the room
+    house->starting_room->hunters[house->starting_room->hunter_count++] = hunter_node->hunter;
     house->hunter_count++;
     log_hunter_init(hunter->id, hunter->current_room->name, hunter->name, hunter->device);
 }
@@ -37,8 +39,13 @@ void hunter_gets_scared(struct Hunter *hunter) {
 void hunter_swap_device(struct Hunter *hunter) {
     EvidenceByte new_device;
     EvidenceByte old_device = hunter->device;
+    // Keep asking for a new weapon while it is the same as what hunter is having
     while ((new_device = hunter_receives_device()) == hunter->device);
+    // Give weapon to the hunter
     hunter->device = new_device;
+    // reset the flag indicating he hasn't found any with the current device
+    hunter->found_evidence = false;
+    // Log
     log_swap(hunter->id, hunter->boredom, hunter->fear, old_device, new_device);
 }
 
@@ -54,10 +61,9 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
             hunter_exit(hunter);
             return;
         }
-        // Simulate random rare decicision to swap weapon
-        // bool random_swap = rand() % 5;
-        // if (random_swap)
-        //     hunter_swap_device(hunter);
+        if (hunter->found_evidence) {
+            hunter_swap_device(hunter);
+        }
         hunter_reset_path(hunter);
     }
 
@@ -77,7 +83,7 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
     else if (++hunter->boredom >= ENTITY_BOREDOM_MAX) {
         hunter->exit_reason = LR_BORED;
         hunter_exit(hunter);
-            house->failed_exit_count++;
+        house->failed_exit_count++;
 
         return;
     }
@@ -90,10 +96,13 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
 
 void hunter_exit(struct Hunter *hunter) {
     struct Room *current_room = hunter->current_room;
+    // remove hunter from the room they're in
     room_remove_hunter(hunter->current_room, hunter);
+    // set hunter status
     hunter->has_exit = true;
-    hunter->current_room = NULL;
+    // Remove their travel history because it is not used anymore
     hunter_clean_path(hunter);
+    // Log
     log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
 }
 
@@ -123,10 +132,13 @@ void hunter_move(struct Hunter *hunter) {
     struct Room *old_room = hunter->current_room;
     struct Room *new_room;
 
-    // If case is solved, the hunter make their way back to the exit room
-    if (hunter->case_file->solved == true) {
-        // Store the head because we will lost track of it
+    // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
+    if (hunter->case_file->solved || hunter->found_evidence) {
+        // Store the head because we will lose track of it
         struct RoomNode *old_room_node = hunter->room_stack.head;
+        // If the next room is full then we don't move
+        if (old_room_node->next->room->hunter_count >= MAX_ROOM_OCCUPANCY)
+            return;
         // Remove reference to the top room on the stack
         hunter->room_stack.head = hunter->room_stack.head->next;
         // Free the un-used room node
@@ -137,11 +149,13 @@ void hunter_move(struct Hunter *hunter) {
     {
         // Pick a connected room randomly
         new_room = hunter_pick_random_room(old_room);
+        // If the next room is full then we don't move
+        if (new_room->hunter_count >= MAX_ROOM_OCCUPANCY)
+            return;
         // Add the new room to his path history
         struct RoomNode *new_room_node = malloc(sizeof(struct RoomNode));
         new_room_node->room = new_room;
-        new_room_node->next = hunter->room_stack.head;\
-        // Update the stack head
+        new_room_node->next = hunter->room_stack.head; // Update the stack head
         hunter->room_stack.head = new_room_node;
     }
     // Remove hunter from old room
@@ -170,6 +184,8 @@ void hunter_get_evidence(struct Hunter *hunter) {
         return;
     // Record the evidence in the log book
     hunter->case_file->collected |= evidence;
+    // Mark hunter has found some evidence with current tool
+    hunter->found_evidence = true;
     // If all evidence has been recoreded then case is solved
     if (++hunter->case_file->evidence_found == EVIDENCE_PER_GHOST)
         hunter->case_file->solved = true;
