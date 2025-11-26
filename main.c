@@ -5,8 +5,9 @@
 
 int main()
 {
-    time_t fixed_seconds = 10;
-    srand(fixed_seconds);
+    // time_t fixed_seconds = 10;
+    srand(2);
+    // srand(time(NULL));
     // 1. Initialize a House structure.
     struct CaseFile case_file = {.evidence_found = 0, .solved = false};
     struct House house = {.case_file = &case_file, .hunter_count = 0};

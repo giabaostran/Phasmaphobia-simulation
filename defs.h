@@ -16,8 +16,8 @@
 #define MAX_CONNECTIONS 8
 #define GHOST_TYPE_COUNT 24
 #define EVIDENCE_TYPE_COUNT 7
-#define ENTITY_BOREDOM_MAX 50
-#define HUNTER_FEAR_MAX 15
+#define ENTITY_BOREDOM_MAX 30
+#define HUNTER_FEAR_MAX 20
 #define DEFAULT_GHOST_ID 68057
 
 typedef unsigned char EvidenceByte; // Just giving a helpful name to unsigned char for evidence bitmasks
