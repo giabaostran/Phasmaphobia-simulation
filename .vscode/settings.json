@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "*.dbclient-js": "javascript",
-        "ghost.h": "c",
-        "hunter.h": "c"
-    }
-}
