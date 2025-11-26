@@ -66,8 +66,6 @@ void hunter_take_turn(House *house, Hunter *hunter) {
         // If the hunter intentionally heading home not for the case is solved, then he needs to swap device
         if (hunter->heading_home) {
             hunter_swap_device(hunter);
-            // Already home so no need to head home again
-            hunter->heading_home = false;
         }
     }
 
@@ -141,9 +139,17 @@ void hunter_move(Hunter *hunter) {
     Room *old_room = hunter->current_room;
     Room *new_room = NULL;
 
-    if (hunter->current_room->is_exit)
+    if (hunter->heading_home) {
+        bool flag = false;
+        if (!hunter->current_room->is_exit)
+            flag = true;
+        else {
+            flag = false;
+            hunter->heading_home=false;
+        }
         log_return_to_van(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device,
-                          hunter->heading_home);
+                          flag);
+    }
 
     // If case is solved, the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
     if (hunter->heading_home) {
@@ -203,6 +209,8 @@ void hunter_get_evidence(Hunter *hunter) {
             hunter->heading_home = true;
         return;
     }
+    if (hunter->fear == 4)
+        printf("Hello");
     // Clear the evidence from the room
     hunter->current_room->evidence &= ~evidence;
     // If such evidence is already recorded, ignore it
