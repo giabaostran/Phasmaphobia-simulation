@@ -1,5 +1,6 @@
 #include "helpers.h"
 #include "room.h"
+
 // ---- House layout ----
 void house_populate_rooms(House *house) {
     // Willow House layout from Phasmaphobia, DO NOT MODIFY HOUSE LAYOUT
@@ -386,7 +387,7 @@ void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_na
     }
 }
 
-void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name, EvidenceType device) {
+void log_hunter_init(int hunter_id,  char *room_name,  char *hunter_name, EvidenceType device) {
     const char *device_text = evidence_to_string(device);
     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,

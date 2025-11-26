@@ -208,7 +208,7 @@ void hunter_get_evidence(Hunter *hunter) {
     // Mark hunter has found some evidence with current tool
     hunter->found_evidence = true;
     // If all evidence has been recoreded then case is solved
-    if (++case_file->evidence_found == EVIDENCE_PER_GHOST)
+    if (evidence_is_valid_ghost(case_file->collected))
         case_file->solved = true;
     log_evidence(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device);
 }

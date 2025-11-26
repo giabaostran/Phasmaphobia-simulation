@@ -31,7 +31,6 @@ typedef enum
 } LogEntityType;
 
 typedef struct
-
 {
     LogEntityType entity_type;
     int entity_id;
@@ -92,7 +91,7 @@ typedef enum
 typedef struct CaseFile
 {
     EvidenceByte collected;
-    int evidence_found;
+    GhostType ghost;
     bool solved;
     sem_t mutex;
 } CaseFile;
