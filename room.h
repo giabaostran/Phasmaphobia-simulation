@@ -9,7 +9,7 @@
  *
  * @return         Nothing
  */
-void room_init( Room *room,  char *name, bool is_exit);
+void room_init( Room *room, const char *name, bool is_exit);
 
 /**
  * COMPLETE: Connect two rooms by adding reference from one to another.

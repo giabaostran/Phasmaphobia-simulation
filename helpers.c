@@ -1,6 +1,5 @@
 #include "helpers.h"
 #include "room.h"
-
 // ---- House layout ----
 void house_populate_rooms(House *house) {
     // Willow House layout from Phasmaphobia, DO NOT MODIFY HOUSE LAYOUT
@@ -387,7 +386,7 @@ void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_na
     }
 }
 
-void log_hunter_init(int hunter_id,  char *room_name,  char *hunter_name, EvidenceType device) {
+void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name, EvidenceType device) {
     const char *device_text = evidence_to_string(device);
     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
@@ -538,13 +537,13 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
     printf("\nVictory Results:\n");
     printf("----------------------------------------------\n");
     printf("- Hunters exited after identifying the ghost: %d/%d\n", house.successful_exit_count, house.hunter_count);
-    printf("- Ghost guess: %s\n", ghost_to_string(house.case_file->collected));
+    printf("- Ghost guess: %s\n", ghost_to_string(house.case_file->ghost));
     printf("- Actual ghost: %s\n", ghost_to_string(ghost.type));
 
     printf("Overall result: %s Win!!!", ghost_win ? "Ghost" : "Hunter(s)");
 }
 
-static const char *log_entity_type_to_string(LogEntityType type) {
+ const char *log_entity_type_to_string(LogEntityType type) {
     switch (type) {
         case LOG_ENTITY_HUNTER:
             return "hunter";
@@ -555,7 +554,7 @@ static const char *log_entity_type_to_string(LogEntityType type) {
     }
 }
 
-static void write_log_record(const LogRecord *record) {
+ void write_log_record(const LogRecord *record) {
     static _Thread_local unsigned line_count = 0;
 
     if (line_count >= 100000) {

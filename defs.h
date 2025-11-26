@@ -24,14 +24,12 @@
 
 typedef unsigned char EvidenceByte;
 
-typedef enum
-{
+typedef enum {
     LOG_ENTITY_HUNTER = 0,
     LOG_ENTITY_GHOST = 1
 } LogEntityType;
 
-typedef struct
-{
+typedef struct {
     LogEntityType entity_type;
     int entity_id;
     const char *room;
@@ -42,15 +40,13 @@ typedef struct
     const char *extra;
 } LogRecord;
 
-typedef enum
-{
+typedef enum {
     LR_EVIDENCE = 0,
     LR_BORED = 1,
     LR_AFRAID = 2
 } LogReason;
 
-typedef enum
-{
+typedef enum {
     EV_EMF = 1 << 0,
     EV_ORBS = 1 << 1,
     EV_RADIO = 1 << 2,
@@ -60,8 +56,7 @@ typedef enum
     EV_INFRARED = 1 << 6
 } EvidenceType;
 
-typedef enum
-{
+typedef enum {
     GH_POLTERGEIST = EV_FINGERPRINTS | EV_TEMPERATURE | EV_WRITING,
     GH_THE_MIMIC = EV_FINGERPRINTS | EV_TEMPERATURE | EV_RADIO,
     GH_HANTU = EV_FINGERPRINTS | EV_TEMPERATURE | EV_ORBS,
@@ -88,8 +83,7 @@ typedef enum
     GH_SPIRIT = EV_WRITING | EV_RADIO | EV_EMF
 } GhostType;
 
-typedef struct CaseFile
-{
+typedef struct CaseFile {
     EvidenceByte collected;
     GhostType ghost;
     bool solved;
@@ -100,8 +94,7 @@ typedef struct Room Room;
 typedef struct Ghost Ghost;
 typedef struct Hunter Hunter;
 
-struct Room
-{
+struct Room {
     char name[MAX_ROOM_NAME];
     Room *connected_rooms[MAX_ROOMS];
     int connection_count;
@@ -112,19 +105,16 @@ struct Room
     EvidenceByte evidence;
 };
 
-typedef struct RoomNode
-{
+typedef struct RoomNode {
     Room *room;
     struct RoomNode *next;
 } RoomNode;
 
-typedef struct RoomStack
-{
+typedef struct RoomStack {
     RoomNode *head;
 } RoomStack;
 
-struct Hunter
-{
+struct Hunter {
     int id;
     char name[MAX_HUNTER_NAME];
     Room *current_room;
@@ -139,19 +129,16 @@ struct Hunter
     bool found_evidence;
 };
 
-typedef struct HunterNode
-{
+typedef struct HunterNode {
     Hunter *hunter;
     struct HunterNode *next;
 } HunterNode;
 
-typedef struct HunterArray
-{
+typedef struct HunterArray {
     HunterNode *head;
 } HunterArray;
 
-struct Ghost
-{
+struct Ghost {
     int id;
     GhostType type;
     Room *current_room;
@@ -159,8 +146,7 @@ struct Ghost
     bool has_exit;
 };
 
-typedef struct House
-{
+typedef struct House {
     Room rooms[MAX_ROOMS];
     Room *starting_room;
     HunterArray hunters;

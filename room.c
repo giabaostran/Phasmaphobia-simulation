@@ -1,6 +1,6 @@
 #include "room.h"
 
-void room_init(Room *room,  char *name, bool is_exit) {
+void room_init(Room *room, const char *name, bool is_exit) {
     room->connection_count = 0;
     room->ghost = NULL;
     room->is_exit = is_exit;

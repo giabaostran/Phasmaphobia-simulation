@@ -1,5 +1,6 @@
 #include "hunter.h"
 #include "room.h"
+#include "helpers.h"
 
 void hunter_init(House *house, char *name, int id) {
     Hunter *hunter = malloc(sizeof(Hunter));
@@ -208,7 +209,9 @@ void hunter_get_evidence(Hunter *hunter) {
     // Mark hunter has found some evidence with current tool
     hunter->found_evidence = true;
     // If all evidence has been recoreded then case is solved
-    if (evidence_is_valid_ghost(case_file->collected))
+    if (evidence_is_valid_ghost(case_file->collected)) {
         case_file->solved = true;
+        case_file->ghost = case_file->collected;
+    }
     log_evidence(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device);
 }
