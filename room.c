@@ -32,3 +32,8 @@ void room_remove_hunter(struct Room *room, struct Hunter *hunter)
     }
     hunter->current_room = NULL;
 }
+
+void room_add_hunter(struct Room *room, struct Hunter *hunter) {
+    room->hunters[room->hunter_count++] = hunter;
+    hunter->current_room = room;
+}

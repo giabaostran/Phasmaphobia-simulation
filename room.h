@@ -22,3 +22,5 @@ void room_init(struct Room *room, const char *name, bool is_exit);
 void rooms_connect(struct Room *a, struct Room *b);
 
 void room_remove_hunter(struct Room *room, struct Hunter *Hunter);
+
+void room_add_hunter(struct Room *room, struct Hunter *hunter);

@@ -131,22 +131,33 @@ struct Room *hunter_pick_random_room(struct Room *room) {
 void hunter_move(struct Hunter *hunter) {
     struct Room *old_room = hunter->current_room;
     struct Room *new_room;
+    bool shortcut_found = false;
 
     // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
     if (hunter->case_file->solved || hunter->found_evidence) {
-        // Store the head because we will lose track of it
-        struct RoomNode *old_room_node = hunter->room_stack.head;
-        // If the next room is full then we don't move
-        if (old_room_node->next->room->hunter_count >= MAX_ROOM_OCCUPANCY)
-            return;
-        // Remove reference to the top room on the stack
-        hunter->room_stack.head = hunter->room_stack.head->next;
-        // Free the un-used room node
-        free(old_room_node);
+        // Proactively check if the current has any shortcut to the exit/van
+        struct Room *current_room = hunter->current_room;
+        for (int i = 0; i < current_room->connection_count; ++i) {
+            if (current_room->connected_rooms[i] == hunter->starting_room && hunter->starting_room->hunter_count < MAX_ROOM_OCCUPANCY) {
+                new_room = hunter->starting_room;
+                shortcut_found = true;
+                break;
+            }
+        }
 
-        new_room = hunter->room_stack.head->room;
-    } else // case is not solved so keep moving the rooms in search of evidence
-    {
+        if (!shortcut_found) {
+            // Store the head because we will lose track of it
+            struct RoomNode *old_room_node = hunter->room_stack.head;
+            // If the next room is full then we don't move
+            if (old_room_node->next->room->hunter_count >= MAX_ROOM_OCCUPANCY)
+                return;
+            // Remove reference to the top room on the stack
+            hunter->room_stack.head = old_room_node->next;
+            free(old_room_node);
+            new_room = hunter->room_stack.head->room;
+        }
+    } else {
+        // case is not solved so keep moving the rooms in search of evidence
         // Pick a connected room randomly
         new_room = hunter_pick_random_room(old_room);
         // If the next room is full then we don't move
@@ -155,22 +166,24 @@ void hunter_move(struct Hunter *hunter) {
         // Add the new room to his path history
         struct RoomNode *new_room_node = malloc(sizeof(struct RoomNode));
         new_room_node->room = new_room;
-        new_room_node->next = hunter->room_stack.head; // Update the stack head
+        new_room_node->next = hunter->room_stack.head;
         hunter->room_stack.head = new_room_node;
     }
+
     // Remove hunter from old room
     room_remove_hunter(old_room, hunter);
+
     // Move hunter
-    hunter->current_room = new_room;
-    // Add hunter to new room
-    new_room->hunters[new_room->hunter_count++] = hunter;
+    room_add_hunter(new_room, hunter);
+
     // Log move
-    if (hunter->current_room->is_exit)
+    if (new_room->is_exit)
         log_return_to_van(hunter->id, hunter->boredom, hunter->fear, old_room->name, hunter->device,
                           hunter->case_file->solved);
     else
         log_move(hunter->id, hunter->boredom, hunter->fear, old_room->name, new_room->name, hunter->device);
 }
+
 
 void hunter_get_evidence(struct Hunter *hunter) {
     enum EvidenceType evidence = hunter->device & hunter->current_room->evidence;
