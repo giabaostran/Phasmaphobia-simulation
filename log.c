@@ -325,3 +325,4 @@ static void write_log_record(const struct LogRecord *record)
     struct timespec pause = {0, 2 * 1000 * 1000}; // 2 ms
     nanosleep(&pause, NULL);
 }
+

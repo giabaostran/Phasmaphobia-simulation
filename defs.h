@@ -8,12 +8,6 @@
 #include <sys/time.h>
 #include <time.h>
 #include <stdio.h>
-/*
-    You are free to rename all of the types and functions defined here.
-
-    The ghost ID must remain the same for the validator to work correctly.
-*/
-
 #define MAX_ROOM_NAME 64
 #define MAX_HUNTER_NAME 64
 #define MAX_ROOMS 24
@@ -139,7 +133,7 @@ struct Ghost
     enum GhostType type;
     struct Room *current_room;
     int boredom;
-    bool has_exit; // determine if a ghost has exit the simulaiton
+    bool has_exit; // determine if a ghost has exit the simulation
 };
 
 // Can be either stack or heap allocated
@@ -151,6 +145,9 @@ struct House
     struct CaseFile *case_file;
     int room_count;
     int hunter_count;
+    int successful_exit_count;
+    int failed_exit_count;
+
 };
 
 #endif // DEFS_H

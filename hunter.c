@@ -2,11 +2,9 @@
 
 void hunter_init(struct House *house, char *name, int id) {
     struct Hunter *hunter = malloc(sizeof(struct Hunter));
-
     strcpy(hunter->name, name);
     hunter->id = id;
-    hunter->fear = 0;
-    hunter->boredom = 0;
+    hunter->boredom = hunter->fear = 0;
     hunter->has_exit = false;
     hunter->starting_room = hunter->current_room = &house->rooms[0];
     hunter->case_file = house->case_file;
@@ -52,13 +50,14 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
             // Set hunter exit reason
             hunter->exit_reason = LR_EVIDENCE;
             // Exit
-            hunter_exit(house, hunter);
+            house->successful_exit_count++;
+            hunter_exit(hunter);
             return;
         }
         // Simulate random rare decicision to swap weapon
-        bool random_swap = rand() % 5;
-        if (random_swap)
-            hunter_swap_device(hunter);
+        // bool random_swap = rand() % 5;
+        // if (random_swap)
+        //     hunter_swap_device(hunter);
         hunter_reset_path(hunter);
     }
 
@@ -68,7 +67,8 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
         // If the hunter is too scared he will leave the simulation
         if (hunter->fear >= HUNTER_FEAR_MAX) {
             hunter->exit_reason = LR_AFRAID;
-            hunter_exit(house, hunter);
+            hunter_exit(hunter);
+            house->failed_exit_count++;
             return;
         }
     }
@@ -76,7 +76,9 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
     // 2. If the hunter is too scared or if too bored he will leave the simulation
     else if (++hunter->boredom >= ENTITY_BOREDOM_MAX) {
         hunter->exit_reason = LR_BORED;
-        hunter_exit(house, hunter);
+        hunter_exit(hunter);
+            house->failed_exit_count++;
+
         return;
     }
     // 3. If user still brave enough to stay or not too bored
@@ -86,12 +88,11 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
     hunter_move(hunter);
 }
 
-void hunter_exit(struct House *house, struct Hunter *hunter) {
+void hunter_exit(struct Hunter *hunter) {
     struct Room *current_room = hunter->current_room;
     room_remove_hunter(hunter->current_room, hunter);
     hunter->has_exit = true;
     hunter->current_room = NULL;
-    house->hunter_count--;
     hunter_clean_path(hunter);
     log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
 }
@@ -113,7 +114,7 @@ void hunter_reset_path(struct Hunter *hunter) {
     hunter->room_stack.head = new_node;
 }
 
-struct Room *hunter_pick_random_room(struct Room * room) {
+struct Room *hunter_pick_random_room(struct Room *room) {
     int rand_room = rand() % room->connection_count;
     return room->connected_rooms[rand_room];
 }
