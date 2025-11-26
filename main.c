@@ -6,8 +6,8 @@
 int main() {
     // time_t fixed_seconds = 10;
     // 1. Initialize a House structure.
-    // srand(time(NULL));
-    srand(4);
+    srand(time(NULL));
+    // srand(4);
     struct CaseFile case_file = {.evidence_found = 0, .solved = false};
     struct House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.

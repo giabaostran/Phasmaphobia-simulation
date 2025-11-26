@@ -1,7 +1,7 @@
 #include "hunter.h"
 
-void hunter_init( House *house, char *name, int id) {
-     Hunter *hunter = malloc(sizeof( Hunter));
+void hunter_init(House *house, char *name, int id) {
+    Hunter *hunter = malloc(sizeof(Hunter));
     strcpy(hunter->name, name);
     hunter->id = id;
     hunter->boredom = hunter->fear = 0;
@@ -11,12 +11,12 @@ void hunter_init( House *house, char *name, int id) {
     hunter->device = hunter_receives_device();
     hunter->found_evidence = false;
 
-     RoomNode *room_node = malloc(sizeof( RoomNode));
+    RoomNode *room_node = malloc(sizeof(RoomNode));
     room_node->room = house->starting_room;
     room_node->next = NULL;
     hunter->room_stack.head = room_node;
 
-     HunterNode *hunter_node = malloc(sizeof( HunterNode));
+    HunterNode *hunter_node = malloc(sizeof(HunterNode));
     hunter_node->next = house->hunters.head;
     hunter_node->hunter = hunter;
     house->hunters.head = hunter_node;
@@ -30,29 +30,29 @@ EvidenceByte hunter_receives_device() {
     return 1 << (rand() % EVIDENCE_TYPE_COUNT);
 }
 
-void hunter_gets_scared( Hunter *hunter) {
+void hunter_gets_scared(Hunter *hunter) {
     hunter->fear++;
     // They are too scared to be bored
     hunter->boredom = 0;
 }
 
-void hunter_swap_device( Hunter *hunter) {
+void hunter_swap_device(Hunter *hunter) {
     EvidenceByte new_device;
     EvidenceByte old_device = hunter->device;
-    // Keep asking for a new weapon while it is the same as what hunter is having
+    // Keep asking for a new weapon while it is the same as what the hunter is having
     while ((new_device = hunter_receives_device()) == hunter->device);
     // Give weapon to the hunter
     hunter->device = new_device;
-    // reset the flag indicating he hasn't found any with the current device
+    // Reset the flag indicating he hasn't found any evidence with the new device
     hunter->found_evidence = false;
     // Log
     log_swap(hunter->id, hunter->boredom, hunter->fear, old_device, new_device);
 }
 
-void hunter_take_turn( House *house,  Hunter *hunter) {
+void hunter_take_turn(House *house, Hunter *hunter) {
     // 0. If the hunter is at the exit/van
     if (hunter->current_room->is_exit) {
-        // If the ghost has been identified
+        // If the ghost has been identified, then the hunter can now exit
         if (hunter->case_file->solved) {
             // Set hunter exit reason
             hunter->exit_reason = LR_EVIDENCE;
@@ -61,32 +61,37 @@ void hunter_take_turn( House *house,  Hunter *hunter) {
             hunter_exit(hunter);
             return;
         }
+        // If the current device has been used to find an evidence, swap it
         if (hunter->found_evidence) {
             hunter_swap_device(hunter);
         }
+        // Clear his travel history and start fresh
         hunter_reset_path(hunter);
     }
 
     // 1. If there is a ghost in the current room
     if (hunter->current_room->ghost != NULL) {
+        // Hunter gets scared
         hunter_gets_scared(hunter);
         // If the hunter is too scared he will leave the simulation
         if (hunter->fear >= HUNTER_FEAR_MAX) {
             hunter->exit_reason = LR_AFRAID;
             hunter_exit(hunter);
+            // Increment number of hunter who "gave up"
             house->failed_exit_count++;
             return;
         }
     }
 
-    // 2. If the hunter is too scared or if too bored he will leave the simulation
+    // 2. If the hunter is too bored he will leave the simulation
     else if (++hunter->boredom >= ENTITY_BOREDOM_MAX) {
         hunter->exit_reason = LR_BORED;
         hunter_exit(hunter);
+        // Increment number of hunter who "gave up"
         house->failed_exit_count++;
-
         return;
     }
+
     // 3. If user still brave enough to stay or not too bored
     hunter_get_evidence(hunter);
 
@@ -94,8 +99,8 @@ void hunter_take_turn( House *house,  Hunter *hunter) {
     hunter_move(hunter);
 }
 
-void hunter_exit( Hunter *hunter) {
-     Room *current_room = hunter->current_room;
+void hunter_exit(Hunter *hunter) {
+    Room *current_room = hunter->current_room;
     // remove hunter from the room they're in
     room_remove_hunter(hunter->current_room, hunter);
     // set hunter status
@@ -106,31 +111,31 @@ void hunter_exit( Hunter *hunter) {
     log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
 }
 
-void hunter_clean_path( Hunter *hunter) {
-     RoomNode *agent = hunter->room_stack.head;
+void hunter_clean_path(Hunter *hunter) {
+    RoomNode *agent = hunter->room_stack.head;
     while (agent != NULL) {
-         RoomNode *next = agent->next; // save the link first
+        RoomNode *next = agent->next; // save the link first
         free(agent);
         agent = next;
     }
 }
 
-void hunter_reset_path( Hunter *hunter) {
+void hunter_reset_path(Hunter *hunter) {
     hunter_clean_path(hunter);
-     RoomNode *new_node = malloc(sizeof( RoomNode));
+    RoomNode *new_node = malloc(sizeof(RoomNode));
     new_node->room = hunter->starting_room;
     new_node->next = NULL;
     hunter->room_stack.head = new_node;
 }
 
- Room *hunter_pick_random_room( Room *room) {
+Room *hunter_pick_random_room(Room *room) {
     int rand_room = rand() % room->connection_count;
     return room->connected_rooms[rand_room];
 }
 
-void hunter_move( Hunter *hunter) {
-     Room *old_room = hunter->current_room;
-     Room *new_room;
+void hunter_move(Hunter *hunter) {
+    Room *old_room = hunter->current_room;
+    Room *new_room;
     bool shortcut_found = false;
 
     // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
@@ -148,7 +153,7 @@ void hunter_move( Hunter *hunter) {
 
         if (!shortcut_found) {
             // Store the head because we will lose track of it
-             RoomNode *old_room_node = hunter->room_stack.head;
+            RoomNode *old_room_node = hunter->room_stack.head;
             // If the next room is full then we don't move
             if (old_room_node->next->room->hunter_count >= MAX_ROOM_OCCUPANCY)
                 return;
@@ -165,7 +170,7 @@ void hunter_move( Hunter *hunter) {
         if (new_room->hunter_count >= MAX_ROOM_OCCUPANCY)
             return;
         // Add the new room to his path history
-         RoomNode *new_room_node = malloc(sizeof( RoomNode));
+        RoomNode *new_room_node = malloc(sizeof(RoomNode));
         new_room_node->room = new_room;
         new_room_node->next = hunter->room_stack.head;
         hunter->room_stack.head = new_room_node;
@@ -186,22 +191,23 @@ void hunter_move( Hunter *hunter) {
 }
 
 
-void hunter_get_evidence( Hunter *hunter) {
-     EvidenceType evidence = hunter->device & hunter->current_room->evidence;
-    // If no evidenxe is found
+void hunter_get_evidence(Hunter *hunter) {
+    EvidenceType evidence = hunter->device & hunter->current_room->evidence;
+    CaseFile *case_file = hunter->case_file;
+    // If no evidence is found
     if (evidence == 0)
         return;
     // Clear the evidence from the room
     hunter->current_room->evidence &= ~evidence;
     // If such evidence is already recorded, ignore it
-    if ((hunter->case_file->collected & evidence) != 0)
+    if ((case_file->collected & evidence) != 0)
         return;
     // Record the evidence in the log book
-    hunter->case_file->collected |= evidence;
+    case_file->collected |= evidence;
     // Mark hunter has found some evidence with current tool
     hunter->found_evidence = true;
     // If all evidence has been recoreded then case is solved
-    if (++hunter->case_file->evidence_found == EVIDENCE_PER_GHOST)
-        hunter->case_file->solved = true;
+    if (++case_file->evidence_found == EVIDENCE_PER_GHOST)
+        case_file->solved = true;
     log_evidence(hunter->id, hunter->boredom, hunter->fear, hunter->current_room->name, hunter->device);
 }
