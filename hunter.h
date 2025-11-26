@@ -1,6 +1,5 @@
 #include "ghost.h"
 #include "defs.h"
-#include "log.h"
 #include "helpers.h"
 
 void hunter_take_turn( House *house,  Hunter *hunter);

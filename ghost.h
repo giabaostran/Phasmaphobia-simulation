@@ -1,5 +1,4 @@
 #include "defs.h"
-#include "log.h"
 #include "helpers.h"
 
 /**

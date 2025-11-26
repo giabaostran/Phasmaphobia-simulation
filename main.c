@@ -3,23 +3,25 @@
 #include "ghost.h"
 #include "hunter.h"
 
-int main() {
+int main()
+{
     // time_t fixed_seconds = 10;
-    // 1. Initialize a House structure.
+    // 1. Initialize a House ure.
     srand(time(NULL));
     // srand(4);
-    struct CaseFile case_file = {.evidence_found = 0, .solved = false};
-    struct House house = {.case_file = &case_file, .hunter_count = 0};
+    CaseFile case_file = {.evidence_found = 0, .solved = false};
+    House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.
     house_populate_rooms(&house);
     // 3. Initialize all of the ghost data and hunters.
-    struct Ghost ghost;
+    Ghost ghost;
     ghost_init(&house, &ghost);
     // buffer to hold user input
     char buffer[MAX_HUNTER_NAME];
     int id;
     // keep creating more hunter until user say stop
-    while (true) {
+    while (true)
+    {
         printf("Enter hunter name (max 63 characters) or 'done' to finish: ");
         fgets(buffer, MAX_HUNTER_NAME, stdin);
         buffer[strcspn(buffer, "\n")] = '\0'; // remove new line char from buffer
@@ -34,13 +36,15 @@ int main() {
 
     bool ghost_win = false, hunter_win = false;
     printf("==== GAME START =====\n");
-    while (true) {
+    while (true)
+    {
         if (ghost.has_exit == false)
             ghost_take_turn(&house, &ghost);
 
-        struct HunterNode *agent = house.hunters.head;
+        HunterNode *agent = house.hunters.head;
 
-        while (agent != NULL) {
+        while (agent != NULL)
+        {
             if (agent->hunter->has_exit == false)
                 hunter_take_turn(&house, agent->hunter);
             agent = agent->next;
@@ -59,9 +63,10 @@ int main() {
 
     printf("\nInvestigation Results:\n");
     printf("=============================================\n");
-    struct HunterNode *agent = house.hunters.head;
-    while (agent != NULL) {
-        struct Hunter *hunter = agent->hunter;
+    HunterNode *agent = house.hunters.head;
+    while (agent != NULL)
+    {
+        Hunter *hunter = agent->hunter;
         printf("-[%s] Hunter %s (ID_%d) exited because of [%s] (bored=%d, fear=%d)\n",
                hunter->exit_reason == LR_EVIDENCE ? "✅" : "❌",
                hunter->name,
@@ -74,11 +79,11 @@ int main() {
 
     printf("\nShare Case File Checklist:\n");
     printf("----------------------------------------------\n");
-    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++) {
+    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++)
+    {
         int mask = 1 << i;
         printf("  [%s] %s\n", (case_file.collected & mask) != 0 ? "✅" : "❌", evidence_to_string(mask));
     }
-
 
     printf("\nVictory Results:\n");
     printf("----------------------------------------------\n");

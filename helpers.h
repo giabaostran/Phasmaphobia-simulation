@@ -2,8 +2,6 @@
 #define HELPERS_H
 
 #include "defs.h"
-#include "helpers.h"
-#include "room.h"
 
 /**
  * @brief Return the lowercase token for a device.
@@ -171,5 +169,7 @@ void log_hunter_init(int id, const char* room, const char* name,  EvidenceType d
  * @param[in] type Ghost type.
  */
 void log_ghost_init(int id, const char* room,  GhostType type);
+static const char *log_entity_type_to_string( LogEntityType type);
+static void write_log_record(const  LogRecord *record);
 
 #endif // HELPERS_H

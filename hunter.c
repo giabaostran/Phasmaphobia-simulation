@@ -1,4 +1,5 @@
 #include "hunter.h"
+#include "room.h"
 
 void hunter_init(House *house, char *name, int id) {
     Hunter *hunter = malloc(sizeof(Hunter));
