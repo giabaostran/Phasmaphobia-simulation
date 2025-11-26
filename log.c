@@ -1,9 +1,9 @@
 #include "log.h"
 
 
-void log_move(int hunter_id, int boredom, int fear, const char *from_room, const char *to_room, enum EvidenceType device)
+void log_move(int hunter_id, int boredom, int fear, const char *from_room, const char *to_room,  EvidenceType device)
 {
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = from_room,
@@ -24,10 +24,10 @@ void log_move(int hunter_id, int boredom, int fear, const char *from_room, const
            fear);
 }
 
-void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, enum EvidenceType device)
+void log_evidence(int hunter_id, int boredom, int fear, const char *room_name,  EvidenceType device)
 {
     const char *evidence = evidence_to_string(device);
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = room_name,
@@ -47,14 +47,14 @@ void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, e
            fear);
 }
 
-void log_swap(int hunter_id, int boredom, int fear, enum EvidenceType from_device, enum EvidenceType to_device)
+void log_swap(int hunter_id, int boredom, int fear,  EvidenceType from_device,  EvidenceType to_device)
 {
     char extra[64];
     const char *from_text = evidence_to_string(from_device);
     const char *to_text = evidence_to_string(to_device);
     snprintf(extra, sizeof(extra), "%s->%s", from_text, to_text);
 
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = NULL,
@@ -74,12 +74,12 @@ void log_swap(int hunter_id, int boredom, int fear, enum EvidenceType from_devic
            fear);
 }
 
-void log_exit(int hunter_id, int boredom, int fear, const char *room_name, enum EvidenceType device, enum LogReason reason)
+void log_exit(int hunter_id, int boredom, int fear, const char *room_name,  EvidenceType device,  LogReason reason)
 {
     const char *device_text = evidence_to_string(device);
     const char *reason_text = exit_reason_to_string(reason);
 
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = room_name,
@@ -100,13 +100,13 @@ void log_exit(int hunter_id, int boredom, int fear, const char *room_name, enum 
            fear);
 }
 
-void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_name, enum EvidenceType device, bool heading_home)
+void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_name,  EvidenceType device, bool heading_home)
 {
     const char *device_text = evidence_to_string(device);
     const char *extra = heading_home ? "start" : "complete";
     const char *action = heading_home ? "RETURN_START" : "RETURN_COMPLETE";
 
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = room_name,
@@ -138,10 +138,10 @@ void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_na
     }
 }
 
-void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name, enum EvidenceType device)
+void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name,  EvidenceType device)
 {
     const char *device_text = evidence_to_string(device);
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
         .room = room_name,
@@ -159,10 +159,10 @@ void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_na
            device_text);
 }
 
-void log_ghost_init(int ghost_id, const char *room_name, enum GhostType type)
+void log_ghost_init(int ghost_id, const char *room_name,  GhostType type)
 {
     const char *type_text = ghost_to_string(type);
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
         .room = room_name,
@@ -181,7 +181,7 @@ void log_ghost_init(int ghost_id, const char *room_name, enum GhostType type)
 
 void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char *to_room)
 {
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
         .room = from_room,
@@ -200,11 +200,11 @@ void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char
            to_room ? to_room : "");
 }
 
-void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, enum EvidenceType evidence)
+void log_ghost_evidence(int ghost_id, int boredom, const char *room_name,  EvidenceType evidence)
 {
     const char *evidence_text = evidence_to_string(evidence);
 
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
         .room = room_name,
@@ -225,7 +225,7 @@ void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, enum E
 
 void log_ghost_exit(int ghost_id, int boredom, const char *room_name)
 {
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
         .room = room_name,
@@ -245,7 +245,7 @@ void log_ghost_exit(int ghost_id, int boredom, const char *room_name)
 
 void log_ghost_idle(int ghost_id, int boredom, const char *room_name)
 {
-    struct LogRecord record = {
+     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
         .room = room_name,
@@ -263,7 +263,7 @@ void log_ghost_idle(int ghost_id, int boredom, const char *room_name)
            room_name ? room_name : "");
 }
 
-static const char *log_entity_type_to_string(enum LogEntityType type)
+static const char *log_entity_type_to_string( LogEntityType type)
 {
     switch (type)
     {
@@ -276,7 +276,7 @@ static const char *log_entity_type_to_string(enum LogEntityType type)
     }
 }
 
-static void write_log_record(const struct LogRecord *record)
+static void write_log_record(const  LogRecord *record)
 {
     static _Thread_local unsigned line_count = 0;
 
@@ -296,6 +296,7 @@ static void write_log_record(const struct LogRecord *record)
         return;
     }
 
+  
     struct timeval tv;
     gettimeofday(&tv, NULL);
     long long timestamp = (long long)tv.tv_sec * 1000LL + (long long)tv.tv_usec / 1000LL;

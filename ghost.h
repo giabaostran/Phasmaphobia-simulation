@@ -3,14 +3,14 @@
 #include "helpers.h"
 
 /**
- * Initializes a Ghost structure and spawns it in a random room.
+ * Initializes a Ghost ure and spawns it in a random room.
  *
  * @param house  Pointer to the House containing the rooms.
- * @param ghost  The ghost structure to initialize.
+ * @param ghost  The ghost ure to initialize.
  *
  * @return       Nothing.
  */
-void ghost_init(struct House *house, struct Ghost *ghost);
+void ghost_init( House *house,  Ghost *ghost);
 
 /**
  * Simulate ghost's behavior in a turn.
@@ -22,7 +22,7 @@ void ghost_init(struct House *house, struct Ghost *ghost);
  *
  * @param ghost  Pointer to the ghost acting this turn.
  */
-void ghost_take_turn(struct House *house, struct Ghost *ghost);
+void ghost_take_turn( House *house,  Ghost *ghost);
 
 /**
  * Moves the ghost from its current room to one of the connected rooms randomly.
@@ -31,14 +31,14 @@ void ghost_take_turn(struct House *house, struct Ghost *ghost);
  *
  * @return       Nothing. The ghost's current_room is updated.
  */
-void ghost_move(struct House *house, struct Ghost *ghost);
+void ghost_move( House *house,  Ghost *ghost);
 
 /**
  *  Simulate ghost behavior of haunting a room, leaving a permanent artifact to the room its currently in
  *
  * @param ghost  The ghost performing a haunt action.
  */
-void ghost_haunt(struct Ghost *ghost);
+void ghost_haunt( Ghost *ghost);
 
 /**
  * Performs a scare action on the huntersin the ghost's current room.
@@ -47,7 +47,7 @@ void ghost_haunt(struct Ghost *ghost);
  *
  * @return       Nothing. Affected hunters will have their fear updated.
  */
-void ghost_scare(struct Ghost *ghost);
+void ghost_scare( Ghost *ghost);
 
 /**
  * Handles the ghost leaving the house because its boredom reaches the limit.
@@ -56,7 +56,7 @@ void ghost_scare(struct Ghost *ghost);
  *
  * @return       Nothing. The ghost is marked as having exited.
  */
-void ghost_exit(struct Ghost *ghost);
+void ghost_exit( Ghost *ghost);
 
 /**
  * Search to see if any hunter is in the room.
@@ -65,7 +65,7 @@ void ghost_exit(struct Ghost *ghost);
  *
  * @return      true if one or more hunters are in the room; false otherwise.
  */
-bool ghost_find_hunter(struct Ghost *ghost);
+bool ghost_find_hunter( Ghost *ghost);
 
 /**
  * Doing nothing but chilling
@@ -74,7 +74,7 @@ bool ghost_find_hunter(struct Ghost *ghost);
  *
  * @return      nothing
  */
-void ghost_idle(struct Ghost *ghost);
+void ghost_idle( Ghost *ghost);
 
 /**
  * Randomly choose a ghost to assign
@@ -83,4 +83,4 @@ void ghost_idle(struct Ghost *ghost);
  *
  * @return a ghost 
  */
-enum GhostType ghost_random();
+ GhostType ghost_random();

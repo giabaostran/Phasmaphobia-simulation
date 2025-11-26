@@ -1,7 +1,7 @@
 #include "hunter.h"
 
-void hunter_init(struct House *house, char *name, int id) {
-    struct Hunter *hunter = malloc(sizeof(struct Hunter));
+void hunter_init( House *house, char *name, int id) {
+     Hunter *hunter = malloc(sizeof( Hunter));
     strcpy(hunter->name, name);
     hunter->id = id;
     hunter->boredom = hunter->fear = 0;
@@ -11,12 +11,12 @@ void hunter_init(struct House *house, char *name, int id) {
     hunter->device = hunter_receives_device();
     hunter->found_evidence = false;
 
-    struct RoomNode *room_node = malloc(sizeof(struct RoomNode));
+     RoomNode *room_node = malloc(sizeof( RoomNode));
     room_node->room = house->starting_room;
     room_node->next = NULL;
     hunter->room_stack.head = room_node;
 
-    struct HunterNode *hunter_node = malloc(sizeof(struct HunterNode));
+     HunterNode *hunter_node = malloc(sizeof( HunterNode));
     hunter_node->next = house->hunters.head;
     hunter_node->hunter = hunter;
     house->hunters.head = hunter_node;
@@ -30,13 +30,13 @@ EvidenceByte hunter_receives_device() {
     return 1 << (rand() % EVIDENCE_TYPE_COUNT);
 }
 
-void hunter_gets_scared(struct Hunter *hunter) {
+void hunter_gets_scared( Hunter *hunter) {
     hunter->fear++;
     // They are too scared to be bored
     hunter->boredom = 0;
 }
 
-void hunter_swap_device(struct Hunter *hunter) {
+void hunter_swap_device( Hunter *hunter) {
     EvidenceByte new_device;
     EvidenceByte old_device = hunter->device;
     // Keep asking for a new weapon while it is the same as what hunter is having
@@ -49,7 +49,7 @@ void hunter_swap_device(struct Hunter *hunter) {
     log_swap(hunter->id, hunter->boredom, hunter->fear, old_device, new_device);
 }
 
-void hunter_take_turn(struct House *house, struct Hunter *hunter) {
+void hunter_take_turn( House *house,  Hunter *hunter) {
     // 0. If the hunter is at the exit/van
     if (hunter->current_room->is_exit) {
         // If the ghost has been identified
@@ -94,8 +94,8 @@ void hunter_take_turn(struct House *house, struct Hunter *hunter) {
     hunter_move(hunter);
 }
 
-void hunter_exit(struct Hunter *hunter) {
-    struct Room *current_room = hunter->current_room;
+void hunter_exit( Hunter *hunter) {
+     Room *current_room = hunter->current_room;
     // remove hunter from the room they're in
     room_remove_hunter(hunter->current_room, hunter);
     // set hunter status
@@ -106,39 +106,40 @@ void hunter_exit(struct Hunter *hunter) {
     log_exit(hunter->id, hunter->boredom, hunter->fear, current_room->name, hunter->device, hunter->exit_reason);
 }
 
-void hunter_clean_path(struct Hunter *hunter) {
-    struct RoomNode *agent = hunter->room_stack.head;
+void hunter_clean_path( Hunter *hunter) {
+     RoomNode *agent = hunter->room_stack.head;
     while (agent != NULL) {
-        struct RoomNode *next = agent->next; // save the link first
+         RoomNode *next = agent->next; // save the link first
         free(agent);
         agent = next;
     }
 }
 
-void hunter_reset_path(struct Hunter *hunter) {
+void hunter_reset_path( Hunter *hunter) {
     hunter_clean_path(hunter);
-    struct RoomNode *new_node = malloc(sizeof(struct RoomNode));
+     RoomNode *new_node = malloc(sizeof( RoomNode));
     new_node->room = hunter->starting_room;
     new_node->next = NULL;
     hunter->room_stack.head = new_node;
 }
 
-struct Room *hunter_pick_random_room(struct Room *room) {
+ Room *hunter_pick_random_room( Room *room) {
     int rand_room = rand() % room->connection_count;
     return room->connected_rooms[rand_room];
 }
 
-void hunter_move(struct Hunter *hunter) {
-    struct Room *old_room = hunter->current_room;
-    struct Room *new_room;
+void hunter_move( Hunter *hunter) {
+     Room *old_room = hunter->current_room;
+     Room *new_room;
     bool shortcut_found = false;
 
     // If case is solved , the hunter make their way back to the exit room. Or if evidence is found using current tool, go back to the exit/van to swap
     if (hunter->case_file->solved || hunter->found_evidence) {
         // Proactively check if the current has any shortcut to the exit/van
-        struct Room *current_room = hunter->current_room;
+        Room *current_room = hunter->current_room;
         for (int i = 0; i < current_room->connection_count; ++i) {
-            if (current_room->connected_rooms[i] == hunter->starting_room && hunter->starting_room->hunter_count < MAX_ROOM_OCCUPANCY) {
+            if (current_room->connected_rooms[i] == hunter->starting_room && hunter->starting_room->hunter_count <
+                MAX_ROOM_OCCUPANCY) {
                 new_room = hunter->starting_room;
                 shortcut_found = true;
                 break;
@@ -147,7 +148,7 @@ void hunter_move(struct Hunter *hunter) {
 
         if (!shortcut_found) {
             // Store the head because we will lose track of it
-            struct RoomNode *old_room_node = hunter->room_stack.head;
+             RoomNode *old_room_node = hunter->room_stack.head;
             // If the next room is full then we don't move
             if (old_room_node->next->room->hunter_count >= MAX_ROOM_OCCUPANCY)
                 return;
@@ -164,7 +165,7 @@ void hunter_move(struct Hunter *hunter) {
         if (new_room->hunter_count >= MAX_ROOM_OCCUPANCY)
             return;
         // Add the new room to his path history
-        struct RoomNode *new_room_node = malloc(sizeof(struct RoomNode));
+         RoomNode *new_room_node = malloc(sizeof( RoomNode));
         new_room_node->room = new_room;
         new_room_node->next = hunter->room_stack.head;
         hunter->room_stack.head = new_room_node;
@@ -185,8 +186,8 @@ void hunter_move(struct Hunter *hunter) {
 }
 
 
-void hunter_get_evidence(struct Hunter *hunter) {
-    enum EvidenceType evidence = hunter->device & hunter->current_room->evidence;
+void hunter_get_evidence( Hunter *hunter) {
+     EvidenceType evidence = hunter->device & hunter->current_room->evidence;
     // If no evidenxe is found
     if (evidence == 0)
         return;

@@ -1,5 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -8,6 +9,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <stdio.h>
+
 #define MAX_ROOM_NAME 64
 #define MAX_HUNTER_NAME 64
 #define MAX_ROOMS 24
@@ -20,135 +22,123 @@
 #define HUNTER_FEAR_MAX 20
 #define DEFAULT_GHOST_ID 68057
 
-typedef unsigned char EvidenceByte; // Just giving a helpful name to unsigned char for evidence bitmasks
+typedef unsigned char EvidenceByte;
 
-enum LogReason
-{
+typedef enum {
     LR_EVIDENCE = 0,
-    LR_BORED = 1,
-    LR_AFRAID = 2
-};
+    LR_BORED    = 1,
+    LR_AFRAID   = 2
+} LogReason;
 
-enum EvidenceType
-{
-    EV_EMF = 1 << 0,
-    EV_ORBS = 1 << 1,
-    EV_RADIO = 1 << 2,
-    EV_TEMPERATURE = 1 << 3,
+typedef enum {
+    EV_EMF          = 1 << 0,
+    EV_ORBS         = 1 << 1,
+    EV_RADIO        = 1 << 2,
+    EV_TEMPERATURE  = 1 << 3,
     EV_FINGERPRINTS = 1 << 4,
-    EV_WRITING = 1 << 5,
-    EV_INFRARED = 1 << 6,
-};
+    EV_WRITING      = 1 << 5,
+    EV_INFRARED     = 1 << 6
+} EvidenceType;
 
-enum GhostType
-{
+typedef enum {
     GH_POLTERGEIST = EV_FINGERPRINTS | EV_TEMPERATURE | EV_WRITING,
-    GH_THE_MIMIC = EV_FINGERPRINTS | EV_TEMPERATURE | EV_RADIO,
-    GH_HANTU = EV_FINGERPRINTS | EV_TEMPERATURE | EV_ORBS,
-    GH_JINN = EV_FINGERPRINTS | EV_TEMPERATURE | EV_EMF,
-    GH_PHANTOM = EV_FINGERPRINTS | EV_INFRARED | EV_RADIO,
-    GH_BANSHEE = EV_FINGERPRINTS | EV_INFRARED | EV_ORBS,
-    GH_GORYO = EV_FINGERPRINTS | EV_INFRARED | EV_EMF,
-    GH_BULLIES = EV_FINGERPRINTS | EV_WRITING | EV_RADIO,
-    GH_MYLING = EV_FINGERPRINTS | EV_WRITING | EV_EMF,
-    GH_OBAKE = EV_FINGERPRINTS | EV_ORBS | EV_EMF,
-    GH_YUREI = EV_TEMPERATURE | EV_INFRARED | EV_ORBS,
-    GH_ONI = EV_TEMPERATURE | EV_INFRARED | EV_EMF,
-    GH_MOROI = EV_TEMPERATURE | EV_WRITING | EV_RADIO,
-    GH_REVENANT = EV_TEMPERATURE | EV_WRITING | EV_ORBS,
-    GH_SHADE = EV_TEMPERATURE | EV_WRITING | EV_EMF,
-    GH_ONRYO = EV_TEMPERATURE | EV_RADIO | EV_ORBS,
-    GH_THE_TWINS = EV_TEMPERATURE | EV_RADIO | EV_EMF,
-    GH_DEOGEN = EV_INFRARED | EV_WRITING | EV_RADIO,
-    GH_THAYE = EV_INFRARED | EV_WRITING | EV_ORBS,
-    GH_YOKAI = EV_INFRARED | EV_RADIO | EV_ORBS,
-    GH_WRAITH = EV_INFRARED | EV_RADIO | EV_EMF,
-    GH_RAIJU = EV_INFRARED | EV_ORBS | EV_EMF,
-    GH_MARE = EV_WRITING | EV_RADIO | EV_ORBS,
-    GH_SPIRIT = EV_WRITING | EV_RADIO | EV_EMF,
-};
+    GH_THE_MIMIC   = EV_FINGERPRINTS | EV_TEMPERATURE | EV_RADIO,
+    GH_HANTU       = EV_FINGERPRINTS | EV_TEMPERATURE | EV_ORBS,
+    GH_JINN        = EV_FINGERPRINTS | EV_TEMPERATURE | EV_EMF,
+    GH_PHANTOM     = EV_FINGERPRINTS | EV_INFRARED  | EV_RADIO,
+    GH_BANSHEE     = EV_FINGERPRINTS | EV_INFRARED  | EV_ORBS,
+    GH_GORYO       = EV_FINGERPRINTS | EV_INFRARED  | EV_EMF,
+    GH_BULLIES     = EV_FINGERPRINTS | EV_WRITING   | EV_RADIO,
+    GH_MYLING      = EV_FINGERPRINTS | EV_WRITING   | EV_EMF,
+    GH_OBAKE       = EV_FINGERPRINTS | EV_ORBS      | EV_EMF,
+    GH_YUREI       = EV_TEMPERATURE  | EV_INFRARED  | EV_ORBS,
+    GH_ONI         = EV_TEMPERATURE  | EV_INFRARED  | EV_EMF,
+    GH_MOROI       = EV_TEMPERATURE  | EV_WRITING   | EV_RADIO,
+    GH_REVENANT    = EV_TEMPERATURE  | EV_WRITING   | EV_ORBS,
+    GH_SHADE       = EV_TEMPERATURE  | EV_WRITING   | EV_EMF,
+    GH_ONRYO       = EV_TEMPERATURE  | EV_RADIO     | EV_ORBS,
+    GH_THE_TWINS   = EV_TEMPERATURE  | EV_RADIO     | EV_EMF,
+    GH_DEOGEN      = EV_INFRARED     | EV_WRITING   | EV_RADIO,
+    GH_THAYE       = EV_INFRARED     | EV_WRITING   | EV_ORBS,
+    GH_YOKAI       = EV_INFRARED     | EV_RADIO     | EV_ORBS,
+    GH_WRAITH      = EV_INFRARED     | EV_RADIO     | EV_EMF,
+    GH_RAIJU       = EV_INFRARED     | EV_ORBS      | EV_EMF,
+    GH_MARE        = EV_WRITING      | EV_RADIO     | EV_ORBS,
+    GH_SPIRIT      = EV_WRITING      | EV_RADIO     | EV_EMF
+} GhostType;
 
-struct CaseFile
-{
-    EvidenceByte collected; // Union of all of the evidence bits collected between all hunters
+typedef struct CaseFile {
+    EvidenceByte collected;
     int evidence_found;
-    bool solved;            // True when >=3 unique bits set
-    sem_t mutex;            // Used for synchronizing both fields when multithreading
-};
+    bool solved;
+    sem_t mutex;
+} CaseFile;
 
-// Implement here based on the requirements, should all be allocated to the House structure
-struct Room
-{
+typedef struct Room Room;
+typedef struct Ghost Ghost;
+typedef struct Hunter Hunter;
+
+struct Room {
     char name[MAX_ROOM_NAME];
-    struct Room *connected_rooms[MAX_ROOMS];
+    Room *connected_rooms[MAX_ROOMS];
     int connection_count;
-    struct Ghost *ghost;
-    struct Hunter *hunters[MAX_ROOM_OCCUPANCY];
+    Ghost *ghost;
+    Hunter *hunters[MAX_ROOM_OCCUPANCY];
     int hunter_count;
     bool is_exit;
     EvidenceByte evidence;
 };
 
-struct RoomNode
-{
-    struct Room *room;
+typedef struct RoomNode {
+    Room *room;
     struct RoomNode *next;
+} RoomNode;
 
-} ;
+typedef struct RoomStack {
+    RoomNode *head;
+} RoomStack;
 
-struct RoomStack
-{
-    struct RoomNode *head;
-};
-
-struct Hunter
-{
+struct Hunter {
     int id;
     char name[MAX_HUNTER_NAME];
-    struct Room *current_room;
-    struct Room *starting_room;
-    struct CaseFile *case_file;
+    Room *current_room;
+    Room *starting_room;
+    CaseFile *case_file;
     EvidenceByte device;
-    struct RoomStack room_stack;
+    RoomStack room_stack;
     int fear;
     int boredom;
-    enum LogReason exit_reason;
+    LogReason exit_reason;
     bool has_exit;
     bool found_evidence;
 };
 
-struct HunterArray
-{
-    struct HunterNode *head;
-};
-
-struct HunterNode
-{
-    struct Hunter *hunter;
+typedef struct HunterNode {
+    Hunter *hunter;
     struct HunterNode *next;
-};
+} HunterNode;
 
-struct Ghost
-{
+typedef struct HunterArray {
+    HunterNode *head;
+} HunterArray;
+
+struct Ghost {
     int id;
-    enum GhostType type;
-    struct Room *current_room;
+    GhostType type;
+    Room *current_room;
     int boredom;
-    bool has_exit; // determine if a ghost has exit the simulation
+    bool has_exit;
 };
 
-// Can be either stack or heap allocated
-struct House
-{
-    struct Room rooms[MAX_ROOMS];
-    struct Room *starting_room; // Needed by house_populate_rooms, but can be adjusted to suit your needs.
-    struct HunterArray hunters;
-    struct CaseFile *case_file;
+typedef struct House {
+    Room rooms[MAX_ROOMS];
+    Room *starting_room;
+    HunterArray hunters;
+    CaseFile *case_file;
     int room_count;
     int hunter_count;
     int successful_exit_count;
     int failed_exit_count;
-
-};
+} House;
 
 #endif // DEFS_H

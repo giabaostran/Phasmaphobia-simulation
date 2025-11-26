@@ -1,7 +1,7 @@
 #include "ghost.h"
 
-enum GhostType ghost_random() {
-    enum GhostType ghost_list[] = {
+ GhostType ghost_random() {
+     GhostType ghost_list[] = {
         GH_POLTERGEIST,
         GH_THE_MIMIC,
         GH_HANTU,
@@ -30,7 +30,7 @@ enum GhostType ghost_random() {
     return ghost_list[rand() % (sizeof(ghost_list) / sizeof(ghost_list[0]) - 1)];
 }
 
-void ghost_init(struct House *house, struct Ghost *ghost) {
+void ghost_init( House *house,  Ghost *ghost) {
     // Initialization
     ghost->id = DEFAULT_GHOST_ID;
     ghost->type = ghost_random(); // This value is hard-coded for now
@@ -44,12 +44,12 @@ void ghost_init(struct House *house, struct Ghost *ghost) {
     log_ghost_init(ghost->id, ghost->current_room->name, ghost->type);
 }
 
-bool ghost_find_hunter(struct Ghost *ghost) {
+bool ghost_find_hunter( Ghost *ghost) {
     // return if any hunter is in the room
     return ghost->current_room->hunter_count > 0;
 }
 
-void ghost_scare(struct Ghost *ghost) {
+void ghost_scare( Ghost *ghost) {
     // Ghost is scaring someone, very excited thusby
     ghost->boredom = 0;
     int option = rand() % 2;
@@ -65,12 +65,12 @@ void ghost_scare(struct Ghost *ghost) {
     }
 }
 
-void ghost_haunt(struct Ghost *ghost) {
-    struct Room *current_room = ghost->current_room;
+void ghost_haunt( Ghost *ghost) {
+     Room *current_room = ghost->current_room;
     // Randomly choose one of the 3 evidence of the ghost to leave at the room
     unsigned char count = rand() % 3 + 1;
     // Create a mask
-    enum EvidenceType mask = 1;
+     EvidenceType mask = 1;
     // Use bitwise op to extract the chosen evidence type
     while (true) {
         if (mask & ghost->type)
@@ -83,8 +83,8 @@ void ghost_haunt(struct Ghost *ghost) {
     log_ghost_evidence(ghost->id, ghost->boredom, current_room->name, mask);
 };
 
-void ghost_move(struct House *house, struct Ghost *ghost) {
-    struct Room *current_room = ghost->current_room;
+void ghost_move( House *house,  Ghost *ghost) {
+     Room *current_room = ghost->current_room;
     int rand_room;
     // Pick a random room to move to
     // But if the room is the starting point (saferoom) then we must pick again
@@ -101,8 +101,8 @@ void ghost_move(struct House *house, struct Ghost *ghost) {
     log_ghost_move(ghost->id, ghost->boredom, current_room->name, ghost->current_room->name);
 }
 
-void ghost_exit(struct Ghost *ghost) {
-    struct Room *current_room = ghost->current_room;
+void ghost_exit( Ghost *ghost) {
+     Room *current_room = ghost->current_room;
     // Remove ghost presence from the room
     current_room->ghost = NULL;
     // Ghost no longer in any room
@@ -112,12 +112,12 @@ void ghost_exit(struct Ghost *ghost) {
     log_ghost_exit(ghost->id, ghost->boredom, current_room->name);
 }
 
-void ghost_idle(struct Ghost *ghost) {
+void ghost_idle( Ghost *ghost) {
     // Literally doing nothing
     log_ghost_idle(ghost->id, ghost->boredom, ghost->current_room->name);
 }
 
-void ghost_take_turn(struct House *house, struct Ghost *ghost) {
+void ghost_take_turn( House *house,  Ghost *ghost) {
     // 1. ENFORCED ACTION: if any hunter is presenting in the room, ghost must scare them
     if (ghost->current_room->hunter_count > 0) {
         ghost_scare(ghost);

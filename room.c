@@ -1,6 +1,6 @@
 #include "room.h"
 
-void room_init(struct Room *room, const char *name, bool is_exit)
+void room_init(Room *room, const char *name, bool is_exit)
 {
     room->connection_count = 0;
     room->ghost = NULL;
@@ -9,13 +9,13 @@ void room_init(struct Room *room, const char *name, bool is_exit)
     strcpy(room->name, name);
 };
 
-void rooms_connect(struct Room *a, struct Room *b)
+void rooms_connect(Room *a, Room *b)
 {
     a->connected_rooms[a->connection_count++] = b;
     b->connected_rooms[b->connection_count++] = a;
 }
 
-void room_remove_hunter(struct Room *room, struct Hunter *hunter)
+void room_remove_hunter(Room *room, Hunter *hunter)
 {
     // Find the hunter inside room
     for (size_t i = 0; i < MAX_ROOM_OCCUPANCY; i++)
@@ -33,7 +33,8 @@ void room_remove_hunter(struct Room *room, struct Hunter *hunter)
     hunter->current_room = NULL;
 }
 
-void room_add_hunter(struct Room *room, struct Hunter *hunter) {
+void room_add_hunter(Room *room, Hunter *hunter)
+{
     room->hunters[room->hunter_count++] = hunter;
     hunter->current_room = room;
 }
