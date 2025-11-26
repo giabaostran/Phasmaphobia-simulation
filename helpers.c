@@ -540,7 +540,7 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
     printf("- Ghost guess: %s\n", ghost_to_string(house.case_file->ghost));
     printf("- Actual ghost: %s\n", ghost_to_string(ghost.type));
 
-    printf("Overall result: %s Win!!!", ghost_win ? "Ghost" : "Hunter(s)");
+    printf("Overall result: %s Win!!!\n", ghost_win ? "Ghost" : "Hunter(s)");
 }
 
  const char *log_entity_type_to_string(LogEntityType type) {

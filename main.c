@@ -5,7 +5,7 @@
 
 int main() {
     // 1. Initialize a House ure.
-    srand(time(NULL));
+    srand(2);
     CaseFile case_file = {.ghost = 0, .solved = false};
     House house = {.case_file = &case_file, .hunter_count = 0};
     // 2. Populate the House with rooms using the provided helper function.
@@ -35,9 +35,7 @@ int main() {
     while (true) {
         if (ghost.has_exit == false)
             ghost_take_turn(&house, &ghost);
-
         HunterNode *agent = house.hunters.head;
-
         while (agent != NULL) {
             if (agent->hunter->has_exit == false)
                 hunter_take_turn(&house, agent->hunter);

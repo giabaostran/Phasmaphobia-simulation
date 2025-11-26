@@ -23,7 +23,7 @@ void hunter_init(House *house, char *name, int id) {
     hunter_node->hunter = hunter;
     house->hunters.head = hunter_node;
     // This only exception allow more hunter than the limit to be in the room
-    house->starting_room->hunters[house->starting_room->hunter_count++] = hunter_node->hunter;
+    // house->starting_room->hunters[house->starting_room->hunter_count++] = hunter_node->hunter;
     house->hunter_count++;
     log_hunter_init(hunter->id, hunter->current_room->name, hunter->name, hunter->device);
 }
@@ -163,7 +163,6 @@ void hunter_move(Hunter *hunter) {
         //         break;
         //     }
         // }
-
         if (!shortcut_found) {
             // Store the head because we will lose track of it
             RoomNode *old_room_node = hunter->room_stack.head;
@@ -209,8 +208,7 @@ void hunter_get_evidence(Hunter *hunter) {
             hunter->heading_home = true;
         return;
     }
-    if (hunter->fear == 4)
-        printf("Hello");
+
     // Clear the evidence from the room
     hunter->current_room->evidence &= ~evidence;
     // If such evidence is already recorded, ignore it
