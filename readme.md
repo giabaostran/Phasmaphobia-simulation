@@ -1,28 +1,51 @@
-# Project Title
+# COMP2401 - FINAL PROJECT PHASMAPHOBIA SIMULATION
 
 ## 📘 Introduction
-This project demonstrates a simple, structured program designed to highlight clear logic flow, maintainable code, and easy-to-understand execution steps. It serves as a foundation for beginners learning program structure or for developers building upon a basic template.
+This project demonstrates my understanding of the topics covered in COMP2401.
 
-The goal of this project is to provide a clear example of how a program initializes, processes data, and produces an output while maintaining readability and organization.
+Designed specifically for CUGHS to simulate the procedures of their operation.
+
+A map of connected rooms. Four hunters, each with a single device to take readings of evidence from a room. A ghost, wandering around and leaving
+evidence for hunters to find. When a hunter is in a room with a ghost, their fear level goes from 0 to 100, and when they reach 100, they’re out of there!
+
+Every ghost leaves behind three distinct kinds of evidence. We get readings in every room of course. There’s also sounds and temperatures to track, but a ghost leaves behind a special form of evidence. If we can find all three of those special kinds of evidence, we can identify the ghost and get rid of it
+
 
 ## 📝 Description
 The program performs a straightforward sequence of operations:
 
-- Accepts input from the user or from predefined values  
-- Processes that input using core logic or algorithms  
-- Generates and displays an output based on the processed data  
+- Generate a determined map/terrain/layout.
+- Randomly spawn one of 24 ghosts available in our database in any of the room in the map.
+- User will be asked to create many hunters as they wishes by providing name and id repeatedly. Finish with a hunter name 'done'
+- The simulation will run automatically.
+- The result of the match will be output to the screen.
+- The program will output a log file for each entity in the simulation under .csv file
+- The provided python program will be used to validate the accuracy of the logs in accordance to the actual program execution.
 
-This structure can be adapted for school assignments, learning exercises, or expanded into more advanced applications.
+## 🔁 How to run
+Please strictly adhere to the provided guide:
 
-## 🔁 Program Flow
+    # code block
+    cd to the directory that contains the source codes (including main.c and makefile)
+    ```
 
-```mermaid
-flowchart TD
-    A[Start] --> B[Initialize Program Variables]
-    B --> C[Prompt for User Input]
-    C --> D[Validate Input]
-    D -->|Valid| E[Process Data / Execute Main Logic]
-    D -->|Invalid| C
-    E --> F[Generate Output]
-    F --> G[Display Results]
-    G --> H[End Program]
+    Compile the code automatically with makefike:
+     ```
+    # code block
+    make
+    ```
+
+    After compilation, run below command to execute:
+    # code block
+    ./main
+    ```
+
+    A set of provided inputs have been given in the input folder:
+    # code block
+    ./main < [NUMBER_OF_INPUT].txt
+    ```
+
+    Validate the log by using the Python file
+    # code block
+    python3 validate_logs.py
+    ```
