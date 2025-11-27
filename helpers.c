@@ -1,7 +1,10 @@
 #include "helpers.h"
 #include "room.h"
+#include <stdint.h>
+
 // ---- House layout ----
-void house_populate_rooms(House *house) {
+void house_populate_rooms(House *house)
+{
     // Willow House layout from Phasmaphobia, DO NOT MODIFY HOUSE LAYOUT
     house->room_count = 13;
     // No-one escape at first
@@ -21,114 +24,121 @@ void house_populate_rooms(House *house) {
     room_init(house->rooms + 11, "Garage", false);
     room_init(house->rooms + 12, "Utility Room", false);
 
-    rooms_connect(house->rooms + 0, house->rooms + 1); // Van - Hallway
-    rooms_connect(house->rooms + 1, house->rooms + 2); // Hallway - Master Bedroom
-    rooms_connect(house->rooms + 1, house->rooms + 3); // Hallway - Boy's Bedroom
-    rooms_connect(house->rooms + 1, house->rooms + 4); // Hallway - Bathroom
-    rooms_connect(house->rooms + 1, house->rooms + 9); // Hallway - Kitchen
-    rooms_connect(house->rooms + 1, house->rooms + 5); // Hallway - Basement
-    rooms_connect(house->rooms + 5, house->rooms + 6); // Basement - Basement Hallway
-    rooms_connect(house->rooms + 6, house->rooms + 7); // Basement Hallway - Right Storage Room
-    rooms_connect(house->rooms + 6, house->rooms + 8); // Basement Hallway - Left Storage Room
-    rooms_connect(house->rooms + 9, house->rooms + 10); // Kitchen - Living Room
-    rooms_connect(house->rooms + 9, house->rooms + 11); // Kitchen - Garage
+    rooms_connect(house->rooms + 0, house->rooms + 1);   // Van - Hallway
+    rooms_connect(house->rooms + 1, house->rooms + 2);   // Hallway - Master Bedroom
+    rooms_connect(house->rooms + 1, house->rooms + 3);   // Hallway - Boy's Bedroom
+    rooms_connect(house->rooms + 1, house->rooms + 4);   // Hallway - Bathroom
+    rooms_connect(house->rooms + 1, house->rooms + 9);   // Hallway - Kitchen
+    rooms_connect(house->rooms + 1, house->rooms + 5);   // Hallway - Basement
+    rooms_connect(house->rooms + 5, house->rooms + 6);   // Basement - Basement Hallway
+    rooms_connect(house->rooms + 6, house->rooms + 7);   // Basement Hallway - Right Storage Room
+    rooms_connect(house->rooms + 6, house->rooms + 8);   // Basement Hallway - Left Storage Room
+    rooms_connect(house->rooms + 9, house->rooms + 10);  // Kitchen - Living Room
+    rooms_connect(house->rooms + 9, house->rooms + 11);  // Kitchen - Garage
     rooms_connect(house->rooms + 11, house->rooms + 12); // Garage - Utility Room
 
     house->starting_room = house->rooms; // Van is at index 0
 }
 
 // ---- to_string functions ----
-const char *evidence_to_string(EvidenceType evidence) {
-    switch (evidence) {
-        case EV_EMF:
-            return "emf";
-        case EV_ORBS:
-            return "orbs";
-        case EV_RADIO:
-            return "radio";
-        case EV_TEMPERATURE:
-            return "temp";
-        case EV_FINGERPRINTS:
-            return "prints";
-        case EV_WRITING:
-            return "writing";
-        case EV_INFRARED:
-            return "infrared";
-        default:
-            return "unknown";
+const char *evidence_to_string(EvidenceType evidence)
+{
+    switch (evidence)
+    {
+    case EV_EMF:
+        return "emf";
+    case EV_ORBS:
+        return "orbs";
+    case EV_RADIO:
+        return "radio";
+    case EV_TEMPERATURE:
+        return "temp";
+    case EV_FINGERPRINTS:
+        return "prints";
+    case EV_WRITING:
+        return "writing";
+    case EV_INFRARED:
+        return "infrared";
+    default:
+        return "unknown";
     }
 }
 
-const char *ghost_to_string(GhostType ghost) {
-    switch (ghost) {
-        case GH_POLTERGEIST:
-            return "poltergeist";
-        case GH_THE_MIMIC:
-            return "the_mimic";
-        case GH_HANTU:
-            return "hantu";
-        case GH_JINN:
-            return "jinn";
-        case GH_PHANTOM:
-            return "phantom";
-        case GH_BANSHEE:
-            return "banshee";
-        case GH_GORYO:
-            return "goryo";
-        case GH_BULLIES:
-            return "bullies";
-        case GH_MYLING:
-            return "myling";
-        case GH_OBAKE:
-            return "obake";
-        case GH_YUREI:
-            return "yurei";
-        case GH_ONI:
-            return "oni";
-        case GH_MOROI:
-            return "moroi";
-        case GH_REVENANT:
-            return "revenant";
-        case GH_SHADE:
-            return "shade";
-        case GH_ONRYO:
-            return "onryo";
-        case GH_THE_TWINS:
-            return "the_twins";
-        case GH_DEOGEN:
-            return "deogen";
-        case GH_THAYE:
-            return "thaye";
-        case GH_YOKAI:
-            return "yokai";
-        case GH_WRAITH:
-            return "wraith";
-        case GH_RAIJU:
-            return "raiju";
-        case GH_MARE:
-            return "mare";
-        case GH_SPIRIT:
-            return "spirit";
-        default:
-            return "unknown";
+const char *ghost_to_string(GhostType ghost)
+{
+    switch (ghost)
+    {
+    case GH_POLTERGEIST:
+        return "poltergeist";
+    case GH_THE_MIMIC:
+        return "the_mimic";
+    case GH_HANTU:
+        return "hantu";
+    case GH_JINN:
+        return "jinn";
+    case GH_PHANTOM:
+        return "phantom";
+    case GH_BANSHEE:
+        return "banshee";
+    case GH_GORYO:
+        return "goryo";
+    case GH_BULLIES:
+        return "bullies";
+    case GH_MYLING:
+        return "myling";
+    case GH_OBAKE:
+        return "obake";
+    case GH_YUREI:
+        return "yurei";
+    case GH_ONI:
+        return "oni";
+    case GH_MOROI:
+        return "moroi";
+    case GH_REVENANT:
+        return "revenant";
+    case GH_SHADE:
+        return "shade";
+    case GH_ONRYO:
+        return "onryo";
+    case GH_THE_TWINS:
+        return "the_twins";
+    case GH_DEOGEN:
+        return "deogen";
+    case GH_THAYE:
+        return "thaye";
+    case GH_YOKAI:
+        return "yokai";
+    case GH_WRAITH:
+        return "wraith";
+    case GH_RAIJU:
+        return "raiju";
+    case GH_MARE:
+        return "mare";
+    case GH_SPIRIT:
+        return "spirit";
+    default:
+        return "unknown";
     }
 }
 
-const char *exit_reason_to_string(LogReason reason) {
-    switch (reason) {
-        case LR_EVIDENCE:
-            return "evidence";
-        case LR_BORED:
-            return "bored";
-        case LR_AFRAID:
-            return "afraid";
-        default:
-            return "unknown";
+const char *exit_reason_to_string(LogReason reason)
+{
+    switch (reason)
+    {
+    case LR_EVIDENCE:
+        return "evidence";
+    case LR_BORED:
+        return "bored";
+    case LR_AFRAID:
+        return "afraid";
+    default:
+        return "unknown";
     }
 }
 
 // ----  retrieval functions ----
-int get_all_evidence_types(const EvidenceType **list) {
+int get_all_evidence_types(const EvidenceType **list)
+{
     // Stored in the data segment so that we can point to it safely
     static const EvidenceType evidence_types[] = {
         EV_EMF,
@@ -137,16 +147,17 @@ int get_all_evidence_types(const EvidenceType **list) {
         EV_TEMPERATURE,
         EV_FINGERPRINTS,
         EV_WRITING,
-        EV_INFRARED
-    };
+        EV_INFRARED};
 
-    if (list) {
+    if (list)
+    {
         *list = evidence_types;
     }
-    return (int) (sizeof(evidence_types) / sizeof(evidence_types[0]));
+    return (int)(sizeof(evidence_types) / sizeof(evidence_types[0]));
 }
 
-int get_all_ghost_types(const GhostType **list) {
+int get_all_ghost_types(const GhostType **list)
+{
     // Stored in the data segment so that we can point to it safely
     static const GhostType ghost_types[] = {
         GH_POLTERGEIST,
@@ -172,42 +183,49 @@ int get_all_ghost_types(const GhostType **list) {
         GH_WRAITH,
         GH_RAIJU,
         GH_MARE,
-        GH_SPIRIT
-    };
+        GH_SPIRIT};
 
-    if (list) {
+    if (list)
+    {
         *list = ghost_types;
     }
-    return (int) (sizeof(ghost_types) / sizeof(ghost_types[0]));
+    return (int)(sizeof(ghost_types) / sizeof(ghost_types[0]));
 }
 
 // ---- Thread-safe random number generation ----
-int rand_int_threadsafe(int lower_inclusive, int upper_exclusive) {
+int rand_int_threadsafe(int lower_inclusive, int upper_exclusive)
+{
     static _Thread_local unsigned seed = 0;
 
-    if (upper_exclusive <= lower_inclusive) {
+    if (upper_exclusive <= lower_inclusive)
+    {
         return lower_inclusive;
     }
 
-    if (seed == 0) {
-        seed = (unsigned) time(NULL) ^ (unsigned) (uintptr_t) pthread_self();
-        if (seed == 0) {
+    if (seed == 0)
+    {
+        seed = (unsigned)time(NULL) ^ (unsigned)(uintptr_t)pthread_self();
+        if (seed == 0)
+        {
             seed = 0xA5A5A5A5u;
         }
     }
 
-    unsigned span = (unsigned) (upper_exclusive - lower_inclusive);
-    unsigned value = (unsigned) rand_r(&seed) % span;
-    return lower_inclusive + (int) value;
+    unsigned span = (unsigned)(upper_exclusive - lower_inclusive);
+    unsigned value = (unsigned)rand_r(&seed) % span;
+    return lower_inclusive + (int)value;
 }
 
 // ---- Evidence helpers ----
-bool evidence_is_valid_ghost(EvidenceByte mask) {
+bool evidence_is_valid_ghost(EvidenceByte mask)
+{
     const GhostType *ghost_types = NULL;
     int ghost_count = get_all_ghost_types(&ghost_types);
 
-    for (int index = 0; index < ghost_count; index++) {
-        if (mask == (EvidenceByte) ghost_types[index]) {
+    for (int index = 0; index < ghost_count; index++)
+    {
+        if (mask == (EvidenceByte)ghost_types[index])
+        {
             return true;
         }
     }
@@ -215,15 +233,16 @@ bool evidence_is_valid_ghost(EvidenceByte mask) {
     return false;
 }
 
-
 // ---- Log helpers ----
 
-void log_result(House house, Ghost ghost, bool ghost_win) {
+void log_result(House house, Ghost ghost, bool ghost_win)
+{
     printf("\nInvestigation Results:\n");
     printf("=============================================\n");
     CaseFile case_file = *house.case_file;
     HunterNode *agent = house.hunters.head;
-    while (agent != NULL) {
+    while (agent != NULL)
+    {
         Hunter *hunter = agent->hunter;
         printf("-[%s] Hunter %s (ID_%d) exited because of [%s] (bored=%d, fear=%d)\n",
                hunter->exit_reason == LR_EVIDENCE ? "✅" : "❌",
@@ -237,7 +256,8 @@ void log_result(House house, Ghost ghost, bool ghost_win) {
 
     printf("\nShare Case File Checklist:\n");
     printf("----------------------------------------------\n");
-    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++) {
+    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++)
+    {
         int mask = 1 << i;
         printf("  [%s] %s\n", (case_file.collected & mask) != 0 ? "✅" : "❌", evidence_to_string(mask));
     }
@@ -251,7 +271,8 @@ void log_result(House house, Ghost ghost, bool ghost_win) {
     printf("Overall result: %s Win!!!", ghost_win ? "Ghost" : "Hunter(s)");
 }
 
-void log_move(int hunter_id, int boredom, int fear, const char *from_room, const char *to_room, EvidenceType device) {
+void log_move(int hunter_id, int boredom, int fear, const char *from_room, const char *to_room, EvidenceType device)
+{
     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
         .entity_id = hunter_id,
@@ -260,8 +281,7 @@ void log_move(int hunter_id, int boredom, int fear, const char *from_room, const
         .boredom = boredom,
         .fear = fear,
         .action = "MOVE",
-        .extra = to_room
-    };
+        .extra = to_room};
 
     write_log_record(&record);
 
@@ -274,7 +294,8 @@ void log_move(int hunter_id, int boredom, int fear, const char *from_room, const
            fear);
 }
 
-void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, EvidenceType device) {
+void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, EvidenceType device)
+{
     const char *evidence = evidence_to_string(device);
     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
@@ -284,8 +305,7 @@ void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, E
         .boredom = boredom,
         .fear = fear,
         .action = "EVIDENCE",
-        .extra = evidence
-    };
+        .extra = evidence};
 
     write_log_record(&record);
 
@@ -297,7 +317,8 @@ void log_evidence(int hunter_id, int boredom, int fear, const char *room_name, E
            fear);
 }
 
-void log_swap(int hunter_id, int boredom, int fear, EvidenceType from_device, EvidenceType to_device) {
+void log_swap(int hunter_id, int boredom, int fear, EvidenceType from_device, EvidenceType to_device)
+{
     char extra[64];
     const char *from_text = evidence_to_string(from_device);
     const char *to_text = evidence_to_string(to_device);
@@ -311,8 +332,7 @@ void log_swap(int hunter_id, int boredom, int fear, EvidenceType from_device, Ev
         .boredom = boredom,
         .fear = fear,
         .action = "SWAP",
-        .extra = extra
-    };
+        .extra = extra};
 
     write_log_record(&record);
 
@@ -324,7 +344,8 @@ void log_swap(int hunter_id, int boredom, int fear, EvidenceType from_device, Ev
            fear);
 }
 
-void log_exit(int hunter_id, int boredom, int fear, const char *room_name, EvidenceType device, LogReason reason) {
+void log_exit(int hunter_id, int boredom, int fear, const char *room_name, EvidenceType device, LogReason reason)
+{
     const char *device_text = evidence_to_string(device);
     const char *reason_text = exit_reason_to_string(reason);
 
@@ -336,8 +357,7 @@ void log_exit(int hunter_id, int boredom, int fear, const char *room_name, Evide
         .boredom = boredom,
         .fear = fear,
         .action = "EXIT",
-        .extra = reason_text
-    };
+        .extra = reason_text};
 
     write_log_record(&record);
 
@@ -351,7 +371,8 @@ void log_exit(int hunter_id, int boredom, int fear, const char *room_name, Evide
 }
 
 void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_name, EvidenceType device,
-                       bool heading_home) {
+                       bool heading_home)
+{
     const char *device_text = evidence_to_string(device);
     const char *extra = heading_home ? "start" : "complete";
     const char *action = heading_home ? "RETURN_START" : "RETURN_COMPLETE";
@@ -364,19 +385,21 @@ void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_na
         .boredom = boredom,
         .fear = fear,
         .action = action,
-        .extra = extra
-    };
+        .extra = extra};
 
     write_log_record(&record);
 
-    if (heading_home) {
+    if (heading_home)
+    {
         printf("Hunter %d using %s heading to van from %s (bored=%d fear=%d)\n",
                hunter_id,
                device_text,
                room_name ? room_name : "",
                boredom,
                fear);
-    } else {
+    }
+    else
+    {
         printf("Hunter %d using %s finished return at %s (bored=%d fear=%d)\n",
                hunter_id,
                device_text,
@@ -386,7 +409,8 @@ void log_return_to_van(int hunter_id, int boredom, int fear, const char *room_na
     }
 }
 
-void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name, EvidenceType device) {
+void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_name, EvidenceType device)
+{
     const char *device_text = evidence_to_string(device);
     LogRecord record = {
         .entity_type = LOG_ENTITY_HUNTER,
@@ -396,8 +420,7 @@ void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_na
         .boredom = 0,
         .fear = 0,
         .action = "INIT",
-        .extra = hunter_name ? hunter_name : ""
-    };
+        .extra = hunter_name ? hunter_name : ""};
 
     write_log_record(&record);
     printf("Hunter %d (%s) initialized in %s with %s\n",
@@ -407,7 +430,8 @@ void log_hunter_init(int hunter_id, const char *room_name, const char *hunter_na
            device_text);
 }
 
-void log_ghost_init(int ghost_id, const char *room_name, GhostType type) {
+void log_ghost_init(int ghost_id, const char *room_name, GhostType type)
+{
     const char *type_text = ghost_to_string(type);
     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
@@ -417,8 +441,7 @@ void log_ghost_init(int ghost_id, const char *room_name, GhostType type) {
         .boredom = 0,
         .fear = 0,
         .action = "INIT",
-        .extra = type_text
-    };
+        .extra = type_text};
 
     write_log_record(&record);
     printf("Ghost %d (%s) initialized in %s\n",
@@ -427,7 +450,8 @@ void log_ghost_init(int ghost_id, const char *room_name, GhostType type) {
            room_name ? room_name : "");
 }
 
-void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char *to_room) {
+void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char *to_room)
+{
     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
@@ -436,8 +460,7 @@ void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char
         .boredom = boredom,
         .fear = 0,
         .action = "MOVE",
-        .extra = to_room
-    };
+        .extra = to_room};
 
     write_log_record(&record);
 
@@ -448,7 +471,8 @@ void log_ghost_move(int ghost_id, int boredom, const char *from_room, const char
            to_room ? to_room : "");
 }
 
-void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, EvidenceType evidence) {
+void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, EvidenceType evidence)
+{
     const char *evidence_text = evidence_to_string(evidence);
 
     LogRecord record = {
@@ -459,8 +483,7 @@ void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, Eviden
         .boredom = boredom,
         .fear = 0,
         .action = "EVIDENCE",
-        .extra = evidence_text
-    };
+        .extra = evidence_text};
 
     write_log_record(&record);
 
@@ -471,7 +494,8 @@ void log_ghost_evidence(int ghost_id, int boredom, const char *room_name, Eviden
            room_name ? room_name : "");
 }
 
-void log_ghost_exit(int ghost_id, int boredom, const char *room_name) {
+void log_ghost_exit(int ghost_id, int boredom, const char *room_name)
+{
     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
@@ -480,8 +504,7 @@ void log_ghost_exit(int ghost_id, int boredom, const char *room_name) {
         .boredom = boredom,
         .fear = 0,
         .action = "EXIT",
-        .extra = ""
-    };
+        .extra = ""};
 
     write_log_record(&record);
 
@@ -491,7 +514,8 @@ void log_ghost_exit(int ghost_id, int boredom, const char *room_name) {
            room_name ? room_name : "");
 }
 
-void log_ghost_idle(int ghost_id, int boredom, const char *room_name) {
+void log_ghost_idle(int ghost_id, int boredom, const char *room_name)
+{
     LogRecord record = {
         .entity_type = LOG_ENTITY_GHOST,
         .entity_id = ghost_id,
@@ -500,8 +524,7 @@ void log_ghost_idle(int ghost_id, int boredom, const char *room_name) {
         .boredom = boredom,
         .fear = 0,
         .action = "IDLE",
-        .extra = ""
-    };
+        .extra = ""};
 
     write_log_record(&record);
 
@@ -511,11 +534,13 @@ void log_ghost_idle(int ghost_id, int boredom, const char *room_name) {
            room_name ? room_name : "");
 }
 
-void display_result(House house, Ghost ghost,bool ghost_win) {
+void display_result(House house, Ghost ghost, bool ghost_win)
+{
     printf("\nInvestigation Results:\n");
     printf("=============================================\n");
     HunterNode *agent = house.hunters.head;
-    while (agent != NULL) {
+    while (agent != NULL)
+    {
         Hunter *hunter = agent->hunter;
         printf("-[%s] Hunter %s (ID_%d) exited because of [%s] (bored=%d, fear=%d)\n",
                hunter->exit_reason == LR_EVIDENCE ? "✅" : "❌",
@@ -529,7 +554,8 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
 
     printf("\nShare Case File Checklist:\n");
     printf("----------------------------------------------\n");
-    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++) {
+    for (int i = 0; i < EVIDENCE_TYPE_COUNT; i++)
+    {
         int mask = 1 << i;
         printf("  [%s] %s\n", (house.case_file->collected & mask) != 0 ? "✅" : "❌", evidence_to_string(mask));
     }
@@ -543,21 +569,25 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
     printf("Overall result: %s Win!!!\n", ghost_win ? "Ghost" : "Hunter(s)");
 }
 
- const char *log_entity_type_to_string(LogEntityType type) {
-    switch (type) {
-        case LOG_ENTITY_HUNTER:
-            return "hunter";
-        case LOG_ENTITY_GHOST:
-            return "ghost";
-        default:
-            return "unknown";
+const char *log_entity_type_to_string(LogEntityType type)
+{
+    switch (type)
+    {
+    case LOG_ENTITY_HUNTER:
+        return "hunter";
+    case LOG_ENTITY_GHOST:
+        return "ghost";
+    default:
+        return "unknown";
     }
 }
 
- void write_log_record(const LogRecord *record) {
+void write_log_record(const LogRecord *record)
+{
     static _Thread_local unsigned line_count = 0;
 
-    if (line_count >= 100000) {
+    if (line_count >= 100000)
+    {
         fprintf(stderr, "Log capped for entity %d; stopping to prevent infinite growth.\n", record->entity_id);
         exit(1);
     }
@@ -567,13 +597,14 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
 
     FILE *log_file = fopen(filename, "a");
 
-    if (!log_file) {
+    if (!log_file)
+    {
         return;
     }
 
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    long long timestamp = (long long) tv.tv_sec * 1000LL + (long long) tv.tv_usec / 1000LL;
+    long long timestamp = (long long)tv.tv_sec * 1000LL + (long long)tv.tv_usec / 1000LL;
 
     const char *entity = log_entity_type_to_string(record->entity_type);
     const char *room = record->room ? record->room : "";
@@ -599,4 +630,15 @@ void display_result(House house, Ghost ghost,bool ghost_win) {
     // Short pause helps ensure successive logs receive distinct timestamps.
     struct timespec pause = {0, 2 * 1000 * 1000}; // 2 ms
     nanosleep(&pause, NULL);
+}
+void free_memory(House *house)
+{
+    HunterNode *agent = house->hunters.head;
+    while (agent != NULL)
+    {
+        HunterNode *dummy = agent->next;
+        free(agent->hunter);
+        free(agent);
+        agent = dummy;
+    }
 }

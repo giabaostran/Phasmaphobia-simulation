@@ -1,6 +1,5 @@
 #ifndef HELPERS_H
 #define HELPERS_H
-
 #include "defs.h"
 
 /**
@@ -170,10 +169,12 @@ void log_hunter_init(int id, const char *room, const char *name, EvidenceType de
  */
 void log_ghost_init(int id, const char *room, GhostType type);
 
-void display_result(House house, Ghost ghost,bool ghost_win);
+void display_result(House house, Ghost ghost, bool ghost_win);
 
- const char *log_entity_type_to_string(LogEntityType type);
+const char *log_entity_type_to_string(LogEntityType type);
 
- void write_log_record(const LogRecord *record);
+void write_log_record(const LogRecord *record);
+
+void free_memory(House *house);
 
 #endif // HELPERS_H

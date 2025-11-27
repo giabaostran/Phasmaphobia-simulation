@@ -55,5 +55,7 @@ int main() {
 
     display_result(house, ghost, ghost_win);
 
+    free_memory(&house);
+
     return 0;
 }
