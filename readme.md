@@ -12,8 +12,8 @@ Every ghost leaves behind three distinct kinds of evidence. We get readings in e
 
 
 ## 📝 Description
-The program performs a straightforward sequence of operations:
 
+The program performs a straightforward sequence of operations:
 - Generate a determined map/terrain/layout.
 - Randomly spawn one of 24 ghosts available in our database in any of the room in the map.
 - User will be asked to create many hunters as they wishes by providing name and id repeatedly. Finish with a hunter name 'done'
@@ -22,7 +22,17 @@ The program performs a straightforward sequence of operations:
 - The program will output a log file for each entity in the simulation under .csv file
 - The provided python program will be used to validate the accuracy of the logs in accordance to the actual program execution.
 
+The project consists of these multiple files:
+- ghost.h/ghost.c: containing the implementations of the methods to be used by ghost entity.
+- helpers.h/helpers.c: containing the implementations of the miscellanious helper methods including logging, convert strings, etc.
+- room.h/room.c: containing the implementations of the utilities belong to room.
+- hunter.h/hunter.c: containing the implementations of the methods to be used by hunter entity.
+- defs.h: containing definition of the business models in the project.
+- main.c: the entry point to the program
+- makefile: quick compilation source.
+
 ## 🔁 How to run
+
 Please strictly adhere to the provided guide:
 
     # code block
