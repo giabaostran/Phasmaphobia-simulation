@@ -1,4 +1,5 @@
 #include "ghost.h"
+#include "helpers.h"
 
  GhostType ghost_random() {
      GhostType ghost_list[] = {

@@ -169,12 +169,23 @@ void log_hunter_init(int id, const char *room, const char *name, EvidenceType de
  */
 void log_ghost_init(int id, const char *room, GhostType type);
 
+/**
+ * @brief Print result of the simulation.
+ * @param[in] house House identifier.
+ * @param[in] ghost Ghost identifier.
+ * @param[in] ghost_win result of the match.
+ */
 void display_result(House house, Ghost ghost, bool ghost_win);
+
+/**
+ * @brief Clean up memory once project finishes executing
+ * @param[in] house House identifier.
+ */
+void free_memory(House *house);
 
 const char *log_entity_type_to_string(LogEntityType type);
 
 void write_log_record(const LogRecord *record);
 
-void free_memory(House *house);
 
 #endif // HELPERS_H

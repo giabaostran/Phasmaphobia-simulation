@@ -1,5 +1,4 @@
 #include "defs.h"
-#include "helpers.h"
 
 /**
  * Initializes a Ghost ure and spawns it in a random room.
@@ -78,8 +77,8 @@ void ghost_idle( Ghost *ghost);
 /**
  * Randomly choose a ghost to assign
  *
- * @param  Nothing 
+ * @param  Nothing
  *
- * @return a ghost 
+ * @return a ghost
  */
  GhostType ghost_random();
