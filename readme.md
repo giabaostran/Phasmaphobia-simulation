@@ -59,3 +59,5 @@ Please strictly adhere to the provided guide:
     # code block
     python3 validate_logs.py
     ```
+
+Developed by Gia Tran
