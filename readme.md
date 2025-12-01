@@ -1,12 +1,12 @@
 # COMP2401 - FINAL PROJECT PHASMAPHOBIA SIMULATION
+# Developed by Gia Tran 101292821
 
 ## 📘 Introduction
 This project demonstrates my understanding of the topics covered in COMP2401.
 
 Designed specifically for CUGHS to simulate the procedures of their operation.
 
-A map of connected rooms. Four hunters, each with a single device to take readings of evidence from a room. A ghost, wandering around and leaving
-evidence for hunters to find. When a hunter is in a room with a ghost, their fear level goes from 0 to 100, and when they reach 100, they’re out of there!
+A map of connected rooms. Four hunters, each with a single device to take readings of evidence from a room. A ghost, wandering around and leaving evidence for hunters to find. When a hunter is in a room with a ghost, their fear level goes from 0 to 100, and when they reach 100, they’re out of there!
 
 Every ghost leaves behind three distinct kinds of evidence. We get readings in every room of course. There’s also sounds and temperatures to track, but a ghost leaves behind a special form of evidence. If we can find all three of those special kinds of evidence, we can identify the ghost and get rid of it
 
@@ -52,12 +52,20 @@ Please strictly adhere to the provided guide:
 
     A set of provided inputs have been given in the input folder:
     # code block
-    ./main < [NUMBER_OF_INPUT].txt
+    ./main < ./input/[NUMBER_OF_ENTRY].txt (Ex: ./main < ./input/6.txt)
+    ```
+
+    To quickly clean up the artifacts from previous run
+    # code block
+    make clean
+    ```
+
+    To validate the program is free from memory leak
+    # code block
+    valgrind ./main
     ```
 
     Validate the log by using the Python file
     # code block
     python3 validate_logs.py
     ```
-
-Developed by Gia Tran
